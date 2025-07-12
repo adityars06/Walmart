@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Home() {
   const router = useRouter();
@@ -66,7 +66,12 @@ export default function Home() {
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      style={styles.container} 
+      showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
+      contentContainerStyle={styles.scrollContent}
+    >
       <Image
         source={{
           uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Walmart_logo.svg/1280px-Walmart_logo.svg.png",
@@ -88,7 +93,13 @@ export default function Home() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Smart Picks for You</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.horizontalScroll}
+          nestedScrollEnabled={true}
+          contentContainerStyle={styles.horizontalScrollContent}
+        >
           {smartPicks.map((item) => (
             <TouchableOpacity key={item.id} style={styles.pickCard}>
               <Image source={{ uri: item.image }} style={styles.pickImage} />
@@ -120,8 +131,6 @@ export default function Home() {
       <TouchableOpacity style={styles.startScanButton} onPress={() => router.push("/camera")}>
         <Text style={styles.startScanText}>Scan Now</Text>
       </TouchableOpacity>
-
-      <View style={styles.bottomSpacing} />
     </ScrollView>
   );
 }
@@ -130,8 +139,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#041f41",
+  },
+  scrollContent: {
     paddingTop: 80,
     paddingHorizontal: 20,
+    paddingBottom: 30,
   },
   logo: {
     width: 200,
@@ -187,6 +199,9 @@ const styles = StyleSheet.create({
   horizontalScroll: {
     marginLeft: -20,
     paddingLeft: 20,
+  },
+  horizontalScrollContent: {
+    paddingRight: 20,
   },
   pickCard: {
     backgroundColor: "#ffffff15",
@@ -268,8 +283,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     fontFamily: "System",
-  },
-  bottomSpacing: {
-    height: 30,
   },
 });

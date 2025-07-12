@@ -1,6 +1,16 @@
-'use client';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { User, Edit3, Save, X, Plus, Trash2, Upload, FileText } from 'lucide-react';
+import {
+  Alert,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
 type DietaryPrefKey = 'vegan' | 'lactoseIntolerant' | 'glutenFree' | 'kosher' | 'halal' | 'nutAllergy';
 
@@ -84,33 +94,29 @@ export default function Profile() {
   };
 
   const handleDeleteCombo = (id: number) => {
-    setSavedCombos(prev => prev.filter(combo => combo.id !== id));
+    Alert.alert(
+      'Delete Combo',
+      'Are you sure you want to delete this combo?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => setSavedCombos(prev => prev.filter(combo => combo.id !== id)) }
+      ]
+    );
   };
 
   const handleProfileUpdate = (field: keyof UserProfile, value: string | number) => {
     setUserProfile(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      Array.from(files).forEach(file => {
-        const fileExtension = file.name.split('.').pop()?.toLowerCase();
-        if (fileExtension && ['pdf', 'doc', 'docx'].includes(fileExtension)) {
-          const newReport = {
-            id: Date.now() + Math.random(),
-            name: file.name,
-            date: new Date().toISOString().split('T')[0],
-            type: fileExtension
-          };
-          setUploadedReports(prev => [...prev, newReport]);
-        }
-      });
-    }
-  };
-
   const handleDeleteReport = (id: number) => {
-    setUploadedReports(prev => prev.filter(report => report.id !== id));
+    Alert.alert(
+      'Delete Report',
+      'Are you sure you want to delete this report?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: () => setUploadedReports(prev => prev.filter(report => report.id !== id)) }
+      ]
+    );
   };
 
   const getDietaryLabel = (key: string) => {
@@ -125,613 +131,525 @@ export default function Profile() {
     return labels[key] || key;
   };
 
-  const styles = {
-    container: {
-      backgroundColor: '#E6F3FF',
-      color: '#1E293B',
-      padding: '24px',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '16px',
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-      marginBottom: '24px'
-    },
-    headerContent: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px'
-    },
-    avatar: {
-      width: '56px',
-      height: '56px',
-      borderRadius: '50%',
-      backgroundColor: '#FEF3C7',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    avatarIcon: {
-      color: '#1E40AF'
-    },
-    title: {
-      fontSize: '24px',
-      fontWeight: '600',
-      color: '#1E3A8A',
-      margin: 0
-    },
-    headerButton: {
-      padding: '8px',
-      borderRadius: '8px',
-      backgroundColor: '#DBEAFE',
-      color: '#1D4ED8',
-      border: 'none',
-      cursor: 'pointer',
-      transition: 'background-color 0.2s'
-    },
-    sectionsContainer: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '24px'
-    },
-    section: {
-      backgroundColor: 'white',
-      padding: '24px',
-      borderRadius: '8px',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
-    },
-    sectionTitle: {
-      fontSize: '20px',
-      fontWeight: '600',
-      marginBottom: '16px',
-      color: '#1E3A8A',
-      margin: 0
-    },
-    sectionHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: '16px'
-    },
-    grid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-      gap: '16px'
-    },
-    infoItem: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      backgroundColor: '#EFF6FF',
-      borderRadius: '8px',
-      padding: '12px',
-      border: '1px solid #DBEAFE'
-    },
-    infoLabel: {
-      color: '#64748B',
-      textTransform: 'capitalize' as const
-    },
-    infoValue: {
-      fontWeight: '500',
-      color: '#1E3A8A'
-    },
-    primaryButton: {
-      backgroundColor: '#1D4ED8',
-      color: 'white',
-      padding: '8px 16px',
-      borderRadius: '8px',
-      border: 'none',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      fontSize: '14px',
-      transition: 'background-color 0.2s'
-    },
-    dietaryList: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '12px'
-    },
-    dietaryItem: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: '#EFF6FF',
-      padding: '12px',
-      borderRadius: '8px',
-      border: '1px solid #DBEAFE'
-    },
-    dietaryLabel: {
-      color: '#1E3A8A'
-    },
-    toggle: {
-      width: '44px',
-      height: '24px',
-      borderRadius: '12px',
-      position: 'relative' as const,
-      cursor: 'pointer',
-      transition: 'background-color 0.2s'
-    },
-    toggleButton: {
-      width: '20px',
-      height: '20px',
-      backgroundColor: 'white',
-      borderRadius: '50%',
-      position: 'absolute' as const,
-      top: '2px',
-      left: '2px',
-      transition: 'transform 0.2s',
-      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
-    },
-    comboList: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '12px'
-    },
-    comboItem: {
-      backgroundColor: '#EFF6FF',
-      borderRadius: '8px',
-      padding: '16px',
-      border: '1px solid #DBEAFE'
-    },
-    comboHeader: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '8px'
-    },
-    comboName: {
-      fontWeight: '600',
-      color: '#1E3A8A',
-      margin: 0
-    },
-    deleteButton: {
-      color: '#EF4444',
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      padding: '4px'
-    },
-    comboItems: {
-      fontSize: '14px',
-      color: '#64748B',
-      margin: '0 0 4px 0'
-    },
-    comboCalories: {
-      fontSize: '14px',
-      fontWeight: '500',
-      color: '#D97706',
-      margin: 0
-    },
-    uploadButton: {
-      backgroundColor: '#1D4ED8',
-      color: 'white',
-      padding: '8px 16px',
-      borderRadius: '8px',
-      border: 'none',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      fontSize: '14px',
-      transition: 'background-color 0.2s'
-    },
-    hiddenInput: {
-      display: 'none'
-    },
-    reportsList: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '12px'
-    },
-    reportItem: {
-      backgroundColor: '#EFF6FF',
-      borderRadius: '8px',
-      padding: '16px',
-      border: '1px solid #DBEAFE',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    },
-    reportContent: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px'
-    },
-    reportIcon: {
-      color: '#1D4ED8'
-    },
-    reportName: {
-      fontWeight: '600',
-      color: '#1E3A8A',
-      margin: 0
-    },
-    reportDate: {
-      fontSize: '14px',
-      color: '#64748B',
-      margin: 0
-    },
-    emptyState: {
-      textAlign: 'center' as const,
-      padding: '32px',
-      color: '#64748B'
-    },
-    emptyIcon: {
-      color: '#BFDBFE',
-      marginBottom: '8px'
-    },
-    emptyText: {
-      margin: '0 0 4px 0'
-    },
-    emptySubtext: {
-      fontSize: '14px',
-      margin: 0
-    },
-    modalOverlay: {
-      position: 'fixed' as const,
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1000
-    },
-    modal: {
-      backgroundColor: 'white',
-      borderRadius: '8px',
-      padding: '24px',
-      width: '100%',
-      maxWidth: '448px',
-      margin: '16px'
-    },
-    modalHeader: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '16px'
-    },
-    modalTitle: {
-      fontSize: '18px',
-      fontWeight: '600',
-      color: '#1E3A8A',
-      margin: 0
-    },
-    closeButton: {
-      color: '#6B7280',
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      padding: '4px'
-    },
-    modalContent: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      gap: '16px'
-    },
-    inputGroup: {
-      display: 'flex',
-      flexDirection: 'column' as const
-    },
-    inputLabel: {
-      fontSize: '14px',
-      color: '#64748B',
-      textTransform: 'capitalize' as const,
-      marginBottom: '4px'
-    },
-    input: {
-      width: '100%',
-      padding: '8px 12px',
-      borderRadius: '6px',
-      border: '1px solid #93C5FD',
-      fontSize: '14px',
-      outline: 'none',
-      boxSizing: 'border-box' as const
-    },
-    textarea: {
-      width: '100%',
-      padding: '8px 12px',
-      borderRadius: '6px',
-      border: '1px solid #93C5FD',
-      fontSize: '14px',
-      outline: 'none',
-      boxSizing: 'border-box' as const,
-      height: '80px',
-      resize: 'vertical' as const
-    },
-    modalButton: {
-      marginTop: '24px',
-      width: '100%',
-      backgroundColor: '#1D4ED8',
-      color: 'white',
-      padding: '8px 16px',
-      borderRadius: '8px',
-      border: 'none',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px',
-      fontSize: '14px'
-    },
-    dietaryModalItem: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: '#EFF6FF',
-      padding: '12px',
-      borderRadius: '8px',
-      border: '1px solid #DBEAFE'
-    },
-    dietaryModalLabel: {
-      color: '#1E3A8A'
-    },
-    toggleLabel: {
-      cursor: 'pointer'
-    },
-    hiddenCheckbox: {
-      display: 'none'
-    }
-  };
-
   return (
-    <div style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerContent}>
-          <div style={styles.avatar}>
-            <User size={28} style={styles.avatarIcon} />
-          </div>
-          <h1 style={styles.title}>Profile</h1>
-        </div>
-        <button 
-          onClick={() => setIsEditModalVisible(true)}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <View style={styles.avatar}>
+            <Ionicons name="person" size={28} color="#1E40AF" />
+          </View>
+          <Text style={styles.title}>Profile</Text>
+        </View>
+        <TouchableOpacity 
+          onPress={() => setIsEditModalVisible(true)}
           style={styles.headerButton}
         >
-          <Edit3 size={20} />
-        </button>
-      </div>
+          <Ionicons name="pencil" size={20} color="#1D4ED8" />
+        </TouchableOpacity>
+      </View>
 
       {/* Personal Info */}
-      <div style={styles.sectionsContainer}>
-        <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>Personal Information</h2>
-          <div style={styles.grid}>
-            {Object.entries(userProfile).map(([key, value]) => (
-              <div key={key} style={styles.infoItem}>
-                <span style={styles.infoLabel}>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                <span style={styles.infoValue}>{value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Personal Information</Text>
+        {Object.entries(userProfile).map(([key, value]) => (
+          <View key={key} style={styles.infoItem}>
+            <Text style={styles.infoLabel}>{key.charAt(0).toUpperCase() + key.slice(1)}</Text>
+            <Text style={styles.infoValue}>{value}</Text>
+          </View>
+        ))}
+      </View>
 
-        {/* Dietary Preferences */}
-        <div style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>Dietary Preferences</h2>
-            <button
-              onClick={() => setIsDietaryEditModalVisible(true)}
-              style={styles.primaryButton}
+      {/* Dietary Preferences */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Dietary Preferences</Text>
+          <TouchableOpacity
+            onPress={() => setIsDietaryEditModalVisible(true)}
+            style={styles.primaryButton}
+          >
+            <Ionicons name="pencil" size={18} color="white" />
+            <Text style={styles.buttonText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+        {Object.entries(dietaryPrefs).map(([key, value]) => (
+          <View key={key} style={styles.dietaryItem}>
+            <Text style={styles.dietaryLabel}>{getDietaryLabel(key)}</Text>
+            <Switch 
+              value={value} 
+              onValueChange={() => handleDietaryToggle(key as DietaryPrefKey)}
+              trackColor={{ false: '#ccc', true: '#FDB503' }}
+              thumbColor="#fff"
+            />
+          </View>
+        ))}
+      </View>
+
+      {/* Saved Combos */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Your Combos</Text>
+          <TouchableOpacity
+            onPress={() => setIsAddComboModalVisible(true)}
+            style={styles.primaryButton}
+          >
+            <Ionicons name="add" size={18} color="white" />
+            <Text style={styles.buttonText}>Add</Text>
+          </TouchableOpacity>
+        </View>
+        {savedCombos.map((combo) => (
+          <View key={combo.id} style={styles.comboItem}>
+            <View style={styles.comboHeader}>
+              <Text style={styles.comboName}>{combo.name}</Text>
+              <TouchableOpacity 
+                onPress={() => handleDeleteCombo(combo.id)} 
+                style={styles.deleteButton}
+              >
+                <Ionicons name="trash" size={16} color="#EF4444" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.comboItems}>{combo.items}</Text>
+            <Text style={styles.comboCalories}>{combo.calories} calories</Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Reports Upload Section */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Medical Reports</Text>
+          <TouchableOpacity style={styles.primaryButton}>
+            <Ionicons name="cloud-upload" size={18} color="white" />
+            <Text style={styles.buttonText}>Upload</Text>
+          </TouchableOpacity>
+        </View>
+        {uploadedReports.map((report) => (
+          <View key={report.id} style={styles.reportItem}>
+            <View style={styles.reportContent}>
+              <Ionicons name="document-text" size={20} color="#1D4ED8" />
+              <View style={styles.reportInfo}>
+                <Text style={styles.reportName}>{report.name}</Text>
+                <Text style={styles.reportDate}>Uploaded on {report.date}</Text>
+              </View>
+            </View>
+            <TouchableOpacity 
+              onPress={() => handleDeleteReport(report.id)} 
+              style={styles.deleteButton}
             >
-              <Edit3 size={18} />
-              Edit
-            </button>
-          </div>
-          <div style={styles.dietaryList}>
-            {Object.entries(dietaryPrefs).map(([key, value]) => (
-              <div key={key} style={styles.dietaryItem}>
-                <span style={styles.dietaryLabel}>{getDietaryLabel(key)}</span>
-                <div style={{...styles.toggle, backgroundColor: value ? '#FDB503' : '#ccc'}}>
-                  <div style={{...styles.toggleButton, transform: value ? 'translateX(20px)' : 'translateX(0)'}}></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Saved Combos */}
-        <div style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>Your Combos</h2>
-            <button
-              onClick={() => setIsAddComboModalVisible(true)}
-              style={styles.primaryButton}
-            >
-              <Plus size={18} />
-              Add
-            </button>
-          </div>
-          <div style={styles.comboList}>
-            {savedCombos.map((combo) => (
-              <div key={combo.id} style={styles.comboItem}>
-                <div style={styles.comboHeader}>
-                  <h3 style={styles.comboName}>{combo.name}</h3>
-                  <button 
-                    onClick={() => handleDeleteCombo(combo.id)} 
-                    style={styles.deleteButton}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-                <p style={styles.comboItems}>{combo.items}</p>
-                <p style={styles.comboCalories}>{combo.calories} calories</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Reports Upload Section */}
-        <div style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>Medical Reports</h2>
-            <label style={styles.uploadButton}>
-              <Upload size={18} />
-              Upload
-              <input
-                type="file"
-                style={styles.hiddenInput}
-                accept=".pdf,.doc,.docx"
-                multiple
-                onChange={handleFileUpload}
-              />
-            </label>
-          </div>
-          <div style={styles.reportsList}>
-            {uploadedReports.map((report) => (
-              <div key={report.id} style={styles.reportItem}>
-                <div style={styles.reportContent}>
-                  <FileText size={20} style={styles.reportIcon} />
-                  <div>
-                    <h3 style={styles.reportName}>{report.name}</h3>
-                    <p style={styles.reportDate}>Uploaded on {report.date}</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => handleDeleteReport(report.id)} 
-                  style={styles.deleteButton}
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            ))}
-            {uploadedReports.length === 0 && (
-              <div style={styles.emptyState}>
-                <FileText size={48} style={styles.emptyIcon} />
-                <p style={styles.emptyText}>No reports uploaded yet</p>
-                <p style={styles.emptySubtext}>Upload your medical reports in PDF, DOC, or DOCX format</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+              <Ionicons name="trash" size={16} color="#EF4444" />
+            </TouchableOpacity>
+          </View>
+        ))}
+        {uploadedReports.length === 0 && (
+          <View style={styles.emptyState}>
+            <Ionicons name="document-text" size={48} color="#BFDBFE" />
+            <Text style={styles.emptyText}>No reports uploaded yet</Text>
+            <Text style={styles.emptySubtext}>Upload your medical reports in PDF, DOC, or DOCX format</Text>
+          </View>
+        )}
+      </View>
 
       {/* Edit Profile Modal */}
-      {isEditModalVisible && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Edit Profile</h2>
-              <button onClick={() => setIsEditModalVisible(false)} style={styles.closeButton}>
-                <X size={20} />
-              </button>
-            </div>
+      <Modal
+        visible={isEditModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsEditModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit Profile</Text>
+              <TouchableOpacity onPress={() => setIsEditModalVisible(false)}>
+                <Ionicons name="close" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
 
-            <div style={styles.modalContent}>
+            <ScrollView style={styles.modalContent}>
               {Object.entries(userProfile).map(([key, value]) => (
-                <div key={key} style={styles.inputGroup}>
-                  <label style={styles.inputLabel}>{key.charAt(0).toUpperCase() + key.slice(1)}</label>
-                  <input
+                <View key={key} style={styles.inputGroup}>
+                  <Text style={styles.inputLabel}>{key.charAt(0).toUpperCase() + key.slice(1)}</Text>
+                  <TextInput
                     style={styles.input}
-                    value={value}
-                    onChange={(e) => handleProfileUpdate(key as keyof UserProfile, e.target.value)}
+                    value={value.toString()}
+                    onChangeText={(text) => handleProfileUpdate(key as keyof UserProfile, text)}
                   />
-                </div>
+                </View>
               ))}
-            </div>
+            </ScrollView>
 
-            <button
+            <TouchableOpacity
               style={styles.modalButton}
-              onClick={() => setIsEditModalVisible(false)}
+              onPress={() => setIsEditModalVisible(false)}
             >
-              <Save size={18} />
-              Save
-            </button>
-          </div>
-        </div>
-      )}
+              <Ionicons name="save" size={18} color="white" />
+              <Text style={styles.modalButtonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Edit Dietary Preferences Modal */}
-      {isDietaryEditModalVisible && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Edit Dietary Preferences</h2>
-              <button onClick={() => setIsDietaryEditModalVisible(false)} style={styles.closeButton}>
-                <X size={20} />
-              </button>
-            </div>
+      <Modal
+        visible={isDietaryEditModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsDietaryEditModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit Dietary Preferences</Text>
+              <TouchableOpacity onPress={() => setIsDietaryEditModalVisible(false)}>
+                <Ionicons name="close" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
 
-            <div style={styles.modalContent}>
+            <ScrollView style={styles.modalContent}>
               {Object.entries(dietaryPrefs).map(([key, value]) => (
-                <div key={key} style={styles.dietaryModalItem}>
-                  <span style={styles.dietaryModalLabel}>{getDietaryLabel(key)}</span>
-                  <label style={styles.toggleLabel}>
-                    <input
-                      type="checkbox"
-                      style={styles.hiddenCheckbox}
-                      checked={value}
-                      onChange={() => handleDietaryToggle(key as DietaryPrefKey)}
-                    />
-                    <div style={{...styles.toggle, backgroundColor: value ? '#FDB503' : '#ccc'}}>
-                      <div style={{...styles.toggleButton, transform: value ? 'translateX(20px)' : 'translateX(0)'}}></div>
-                    </div>
-                  </label>
-                </div>
+                <View key={key} style={styles.dietaryModalItem}>
+                  <Text style={styles.dietaryModalLabel}>{getDietaryLabel(key)}</Text>
+                  <Switch 
+                    value={value} 
+                    onValueChange={() => handleDietaryToggle(key as DietaryPrefKey)}
+                    trackColor={{ false: '#ccc', true: '#FDB503' }}
+                    thumbColor="#fff"
+                  />
+                </View>
               ))}
-            </div>
+            </ScrollView>
 
-            <button
+            <TouchableOpacity
               style={styles.modalButton}
-              onClick={() => setIsDietaryEditModalVisible(false)}
+              onPress={() => setIsDietaryEditModalVisible(false)}
             >
-              <Save size={18} />
-              Save Changes
-            </button>
-          </div>
-        </div>
-      )}
+              <Ionicons name="save" size={18} color="white" />
+              <Text style={styles.modalButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Add Combo Modal */}
-      {isAddComboModalVisible && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
-              <h2 style={styles.modalTitle}>Add Combo</h2>
-              <button onClick={() => setIsAddComboModalVisible(false)} style={styles.closeButton}>
-                <X size={20} />
-              </button>
-            </div>
+      <Modal
+        visible={isAddComboModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsAddComboModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Add Combo</Text>
+              <TouchableOpacity onPress={() => setIsAddComboModalVisible(false)}>
+                <Ionicons name="close" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
 
-            <div style={styles.modalContent}>
-              <input
+            <View style={styles.modalContent}>
+              <TextInput
                 placeholder="Combo Name"
                 style={styles.input}
                 value={newCombo.name}
-                onChange={(e) => setNewCombo({ ...newCombo, name: e.target.value })}
+                onChangeText={(text) => setNewCombo({ ...newCombo, name: text })}
               />
-              <textarea
+              <TextInput
                 placeholder="Items"
-                style={styles.textarea}
+                style={[styles.input, styles.textarea]}
                 value={newCombo.items}
-                onChange={(e) => setNewCombo({ ...newCombo, items: e.target.value })}
+                onChangeText={(text) => setNewCombo({ ...newCombo, items: text })}
+                multiline
+                numberOfLines={3}
               />
-              <input
-                type="number"
+              <TextInput
                 placeholder="Calories"
                 style={styles.input}
                 value={newCombo.calories}
-                onChange={(e) => setNewCombo({ ...newCombo, calories: e.target.value })}
+                onChangeText={(text) => setNewCombo({ ...newCombo, calories: text })}
+                keyboardType="numeric"
               />
-            </div>
+            </View>
 
-            <button
-              onClick={handleAddCombo}
+            <TouchableOpacity
+              onPress={handleAddCombo}
               style={styles.modalButton}
             >
-              <Plus size={18} />
-              Add Combo
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+              <Ionicons name="add" size={18} color="white" />
+              <Text style={styles.modalButtonText}>Add Combo</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#E6F3FF',
+    padding: 24,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    marginBottom: 24,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#FEF3C7',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#1E3A8A',
+  },
+  headerButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: '#DBEAFE',
+  },
+  section: {
+    backgroundColor: 'white',
+    padding: 24,
+    borderRadius: 8,
+    marginBottom: 24,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 16,
+    color: '#1E3A8A',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  infoItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#EFF6FF',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+  },
+  infoLabel: {
+    color: '#64748B',
+    textTransform: 'capitalize',
+  },
+  infoValue: {
+    fontWeight: '500',
+    color: '#1E3A8A',
+  },
+  primaryButton: {
+    backgroundColor: '#1D4ED8',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  dietaryItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#EFF6FF',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+  },
+  dietaryLabel: {
+    color: '#1E3A8A',
+    fontSize: 16,
+  },
+  comboItem: {
+    backgroundColor: '#EFF6FF',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+  },
+  comboHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  comboName: {
+    fontWeight: '600',
+    color: '#1E3A8A',
+    fontSize: 16,
+  },
+  deleteButton: {
+    padding: 4,
+  },
+  comboItems: {
+    fontSize: 14,
+    color: '#64748B',
+    marginBottom: 4,
+  },
+  comboCalories: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#D97706',
+  },
+  reportItem: {
+    backgroundColor: '#EFF6FF',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  reportContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  reportInfo: {
+    flex: 1,
+  },
+  reportName: {
+    fontWeight: '600',
+    color: '#1E3A8A',
+    fontSize: 16,
+  },
+  reportDate: {
+    fontSize: 14,
+    color: '#64748B',
+  },
+  emptyState: {
+    alignItems: 'center',
+    padding: 32,
+  },
+  emptyText: {
+    marginTop: 8,
+    marginBottom: 4,
+    color: '#64748B',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: '#64748B',
+    textAlign: 'center',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  modal: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 24,
+    width: '100%',
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1E3A8A',
+  },
+  modalContent: {
+    gap: 16,
+  },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: '#64748B',
+    textTransform: 'capitalize',
+    marginBottom: 4,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#93C5FD',
+    borderRadius: 6,
+    padding: 12,
+    fontSize: 14,
+  },
+  textarea: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  modalButton: {
+    marginTop: 24,
+    backgroundColor: '#1D4ED8',
+    padding: 12,
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  dietaryModalItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#EFF6FF',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#DBEAFE',
+  },
+  dietaryModalLabel: {
+    color: '#1E3A8A',
+    fontSize: 16,
+  },
+});
