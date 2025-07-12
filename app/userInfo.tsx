@@ -615,8 +615,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   customInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     gap: 12,
     marginTop: 20,
     backgroundColor: '#f0f4f8',
@@ -628,8 +627,9 @@ const styles = StyleSheet.create({
   addButton: {
     backgroundColor: '#ffc220',
     borderRadius: 12,
-    paddingVertical: 15,
-    paddingHorizontal: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignSelf: 'flex-start',
     shadowColor: '#ffc220',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
