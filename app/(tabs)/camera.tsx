@@ -1,8 +1,9 @@
 import { useIsFocused } from '@react-navigation/native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { Dimensions, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Camera() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -11,16 +12,37 @@ export default function Camera() {
   const cameraRef = useRef<CameraView>(null);
   const isFocused = useIsFocused();
   const router = useRouter();
+  
+  // Animation for shutter button feedback
+  const buttonScale = useRef(new Animated.Value(1)).current;
 
   const takePhoto = async () => {
-    if (cameraRef.current) {
+    if (cameraRef.current && !isProcessing) {
       try {
+        // Immediate visual feedback with button animation
+        Animated.sequence([
+          Animated.timing(buttonScale, {
+            toValue: 0.9,
+            duration: 100,
+            useNativeDriver: true,
+          }),
+          Animated.timing(buttonScale, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          })
+        ]).start();
+        
         setIsProcessing(true);
+        
+        // Optimized photo capture settings for speed
         const photo = await cameraRef.current.takePictureAsync({
-          quality: 0.8,
+          quality: 0.6, // Reduced for faster processing
           base64: false,
-          exif: false
+          exif: false,
+          skipProcessing: true // Skip internal processing for speed
         });
+        
         console.log('Photo taken:', photo);
         setPhotoUri(photo.uri);
         
@@ -40,10 +62,50 @@ export default function Camera() {
     setIsProcessing(false);
   };
 
+  const pickImageFromGallery = async () => {
+    try {
+      // Request gallery permissions
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+        console.log('Gallery permission denied');
+        return;
+      }
+
+      // Launch image picker
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.6,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setIsProcessing(true);
+        setPhotoUri(result.assets[0].uri);
+        
+        // Auto-redirect to product summary after 2 seconds
+        setTimeout(() => {
+          router.push('/productSummary');
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+    }
+  };
+
   if (!permission) return <View />;
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
+        {/* Background Shapes */}
+        <View style={styles.backgroundShapes}>
+          <View style={[styles.shape, styles.shape1]} />
+          <View style={[styles.shape, styles.shape2]} />
+          <View style={[styles.shape, styles.shape3]} />
+          <View style={[styles.shape, styles.shape4]} />
+        </View>
+        
         <StatusBar barStyle="light-content" backgroundColor="#041f41" />
         <View style={styles.permissionCard}>
           <Text style={styles.permissionTitle}>Camera Access Required</Text>
@@ -60,6 +122,14 @@ export default function Camera() {
 
   return (
     <View style={styles.container}>
+      {/* Background Shapes - Same as index.tsx */}
+      <View style={styles.backgroundShapes}>
+        <View style={[styles.shape, styles.shape1]} />
+        <View style={[styles.shape, styles.shape2]} />
+        <View style={[styles.shape, styles.shape3]} />
+        <View style={[styles.shape, styles.shape4]} />
+      </View>
+      
       <StatusBar barStyle="light-content" backgroundColor="#041f41" />
       
       {/* Show Processing/Preview if Photo Taken */}
@@ -113,15 +183,41 @@ export default function Camera() {
 
             {/* Bottom Controls */}
             <View style={styles.controlsContainer}>
+              {/* Gallery Button */}
               <TouchableOpacity 
-                style={[styles.captureButton, isProcessing && styles.captureButtonDisabled]} 
-                onPress={takePhoto}
-                disabled={isProcessing}
+                style={styles.galleryButton}
+                onPress={pickImageFromGallery}
+                activeOpacity={0.8}
               >
-                <View style={styles.shutterCircle}>
-                  <View style={styles.shutterInner} />
+                <View style={styles.galleryIconContainer}>
+                  <View style={styles.galleryIconFrame}>
+                    <View style={styles.galleryIconInner} />
+                    <View style={styles.galleryIconCorner} />
+                  </View>
+                  <View style={styles.galleryIconDots}>
+                    <View style={styles.galleryDot} />
+                    <View style={styles.galleryDot} />
+                    <View style={styles.galleryDot} />
+                  </View>
                 </View>
               </TouchableOpacity>
+
+              {/* Shutter Button */}
+              <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+                <TouchableOpacity 
+                  style={[styles.captureButton, isProcessing && styles.captureButtonDisabled]} 
+                  onPress={takePhoto}
+                  disabled={isProcessing}
+                  activeOpacity={0.8}
+                >
+                  <View style={styles.shutterCircle}>
+                    <View style={[styles.shutterInner, isProcessing && styles.shutterProcessing]} />
+                  </View>
+                </TouchableOpacity>
+              </Animated.View>
+
+              {/* Placeholder for symmetry */}
+              <View style={styles.galleryButton} />
             </View>
           </View>
         )
@@ -137,6 +233,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#041f41',
+  },
+  
+  // Background Shapes - Same as index.tsx
+  backgroundShapes: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
+  },
+  shape: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 20,
+  },
+  shape1: {
+    width: 120,
+    height: 120,
+    top: 100,
+    left: -40,
+    transform: [{ rotate: '45deg' }],
+  },
+  shape2: {
+    width: 80,
+    height: 80,
+    top: 250,
+    right: -20,
+    borderRadius: 40,
+  },
+  shape3: {
+    width: 100,
+    height: 100,
+    bottom: 200,
+    left: 20,
+    transform: [{ rotate: '30deg' }],
+  },
+  shape4: {
+    width: 60,
+    height: 60,
+    top: 400,
+    right: 50,
+    borderRadius: 30,
+    transform: [{ rotate: '60deg' }],
   },
   
   // Permission Styles
@@ -158,6 +298,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 10,
     maxWidth: 350,
+    zIndex: 10,
   },
   permissionTitle: {
     fontSize: 24,
@@ -193,6 +334,7 @@ const styles = StyleSheet.create({
   // Camera Container
   cameraContainer: {
     flex: 1,
+    zIndex: 5,
   },
   
   // Header Styles
@@ -289,9 +431,70 @@ const styles = StyleSheet.create({
 
   // Controls
   controlsContainer: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 50,
+    paddingHorizontal: 60,
+  },
+  galleryButton: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(0, 113, 206, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(0, 113, 206, 0.3)',
+    shadowColor: '#0071ce',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  galleryIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  galleryIconFrame: {
+    width: 24,
+    height: 18,
+    borderWidth: 2,
+    borderColor: '#ffffff',
+    borderRadius: 3,
+    backgroundColor: 'transparent',
+    position: 'relative',
+    marginBottom: 4,
+  },
+  galleryIconInner: {
+    position: 'absolute',
+    top: 2,
+    left: 2,
+    right: 2,
+    bottom: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 1,
+  },
+  galleryIconCorner: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    width: 8,
+    height: 6,
+    backgroundColor: '#ffffff',
+    borderRadius: 1,
+  },
+  galleryIconDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 2,
+  },
+  galleryDot: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: '#ffffff',
   },
   captureButton: {
     width: 90,
@@ -331,12 +534,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
+  shutterProcessing: {
+    backgroundColor: '#ffc220',
+  },
 
   // Preview Styles
   previewContainer: {
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 30,
+    zIndex: 5,
   },
   previewHeader: {
     alignItems: 'center',
