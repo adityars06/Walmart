@@ -43,6 +43,17 @@ export default function UserInfo() {
   const [reportUploaded, setReportUploaded] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState('');
   const [showUploadModal, setShowUploadModal] = useState(false);
+  
+  // Health Apps State
+  const [healthApps, setHealthApps] = useState({
+    googleFit: { connected: false, connecting: false },
+    appleFitness: { connected: false, connecting: false },
+    samsungHealth: { connected: false, connecting: false }
+  });
+  
+  // Permission Modal State
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [selectedApp, setSelectedApp] = useState<{name: string, displayName: string, key: string} | null>(null);
 
   const healthGoalOptions = [
     'Weight Loss',
@@ -179,6 +190,66 @@ export default function UserInfo() {
       Alert.alert('Error', 'Failed to pick document. Please try again.');
       console.log('DocumentPicker Error: ', error);
     }
+  };
+
+  const healthAppsData = [
+    { 
+      key: 'googleFit',
+      name: 'googlefit', 
+      displayName: 'Google Fit', 
+      icon: '🏃‍♂️', 
+      color: '#4285F4' 
+    },
+    { 
+      key: 'appleFitness',
+      name: 'applefitness', 
+      displayName: 'Apple Fitness', 
+      icon: '🍎', 
+      color: '#000000' 
+    },
+    { 
+      key: 'samsungHealth',
+      name: 'samsunghealth', 
+      displayName: 'Samsung Health', 
+      icon: '💚', 
+      color: '#1BA1E2' 
+    }
+  ];
+
+  const handleHealthAppConnect = (app: {key: string, name: string, displayName: string}) => {
+    setSelectedApp(app);
+    setShowPermissionModal(true);
+  };
+
+  const handlePermissionAllow = () => {
+    if (selectedApp) {
+      setShowPermissionModal(false);
+      
+      // Set connecting state
+      setHealthApps(prev => ({
+        ...prev,
+        [selectedApp.key]: { ...prev[selectedApp.key as keyof typeof prev], connecting: true }
+      }));
+      
+      // Simulate connection process
+      setTimeout(() => {
+        setHealthApps(prev => ({
+          ...prev,
+          [selectedApp.key]: { connected: true, connecting: false }
+        }));
+        setSelectedApp(null);
+        Alert.alert(
+          'Success! ✅', 
+          `Connected to ${selectedApp.displayName} successfully.\n\nYour health data will help us provide better recommendations.`,
+          [{ text: 'Got it!', style: 'default' }]
+        );
+      }, 2000);
+    }
+  };
+
+  const handlePermissionDeny = () => {
+    setShowPermissionModal(false);
+    setSelectedApp(null);
   };
 
   const handleSubmit = () => {
@@ -383,6 +454,44 @@ export default function UserInfo() {
         )}
       </View>
 
+      {/* Health Apps Integration */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Connect Your Health Apps</Text>
+        <Text style={styles.sectionSubtitle}>Sync your activity data for personalized recommendations</Text>
+        
+        <View style={styles.healthAppsContainer}>
+          {healthAppsData.map((app) => {
+            const appState = healthApps[app.key as keyof typeof healthApps];
+            return (
+              <TouchableOpacity
+                key={app.key}
+                style={[
+                  styles.healthAppCard,
+                  appState.connected && styles.healthAppCardConnected,
+                  appState.connecting && styles.healthAppCardConnecting
+                ]}
+                onPress={() => handleHealthAppConnect(app)}
+                disabled={appState.connected || appState.connecting}
+              >
+                <View style={[styles.healthAppIconContainer, { backgroundColor: app.color }]}>
+                  <Text style={styles.healthAppIcon}>{app.icon}</Text>
+                </View>
+                <Text style={styles.healthAppName}>{app.displayName}</Text>
+                <View style={styles.healthAppStatus}>
+                  {appState.connecting ? (
+                    <Text style={styles.healthAppStatusText}>Connecting...</Text>
+                  ) : appState.connected ? (
+                    <Text style={styles.healthAppStatusTextConnected}>✓ Connected</Text>
+                  ) : (
+                    <Text style={styles.healthAppStatusText}>Tap to Connect</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+
       {/* Personal Note */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Add your personal note</Text>
@@ -429,6 +538,54 @@ export default function UserInfo() {
               <Text style={styles.dot}>●</Text>
               <Text style={styles.dot}>●</Text>
               <Text style={styles.dot}>●</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Permission Modal */}
+      <Modal visible={showPermissionModal} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.permissionModalContent}>
+            <View style={styles.permissionModalHeader}>
+              <Text style={styles.permissionModalTitle}>Allow Access</Text>
+              <Text style={styles.permissionModalSubtitle}>
+                Walmart TrueCart+ would like to access {selectedApp?.displayName}
+              </Text>
+            </View>
+            
+            <View style={styles.permissionModalBody}>
+              <View style={styles.permissionIconWrapper}>
+                <Image
+                  source={{
+                    uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Walmart_logo.svg/1280px-Walmart_logo.svg.png"
+                  }}
+                  style={styles.permissionWalmartLogo}
+                  resizeMode="contain"
+                />
+                <Text style={styles.permissionArrow}>→</Text>
+                <View style={styles.permissionAppIcon}>
+                  <Text style={styles.permissionAppEmoji}>
+                    {selectedApp?.name === 'googlefit' && '🏃‍♂️'}
+                    {selectedApp?.name === 'applefitness' && '🍎'}
+                    {selectedApp?.name === 'samsunghealth' && '💚'}
+                  </Text>
+                </View>
+              </View>
+              
+              <Text style={styles.permissionModalSubtitle}>
+                This will allow TrueCart+ to read your health and fitness data to provide personalized product recommendations.
+              </Text>
+            </View>
+            
+            <View style={styles.permissionModalButtons}>
+              <TouchableOpacity style={styles.permissionModalButton} onPress={handlePermissionDeny}>
+                <Text style={styles.permissionModalDenyText}>Don't Allow</Text>
+              </TouchableOpacity>
+              <View style={styles.permissionModalButtonSeparator} />
+              <TouchableOpacity style={styles.permissionModalButton} onPress={handlePermissionAllow}>
+                <Text style={styles.permissionModalAllowText}>Allow</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -722,5 +879,248 @@ const styles = StyleSheet.create({
   dot: {
     fontSize: 24,
     color: '#0071ce',
+  },
+  
+  // Google Fit Styles
+  googleFitContainer: {
+    backgroundColor: '#f8fafc',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 2,
+    borderColor: '#e2e8f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  googleFitHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  
+  // Health Apps Styles
+  healthAppsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+  },
+  healthAppCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    borderWidth: 2,
+    borderColor: '#f3f4f6',
+  },
+  healthAppCardConnected: {
+    borderColor: '#22c55e',
+    backgroundColor: '#f0fdf4',
+  },
+  healthAppCardConnecting: {
+    borderColor: '#6b7280',
+    backgroundColor: '#f9fafb',
+  },
+  healthAppIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  healthAppIcon: {
+    fontSize: 24,
+  },
+  healthAppName: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#041f41',
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  healthAppStatus: {
+    alignItems: 'center',
+  },
+  healthAppStatusText: {
+    fontSize: 10,
+    color: '#6b7280',
+    textAlign: 'center',
+  },
+  healthAppStatusTextConnected: {
+    fontSize: 10,
+    color: '#22c55e',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  
+  // Permission Modal Styles
+  permissionModalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    margin: 20,
+    maxWidth: 340,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  permissionModalHeader: {
+    padding: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  permissionModalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#041f41',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  permissionModalSubtitle: {
+    fontSize: 14,
+    color: '#6b7280',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  permissionModalBody: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  permissionIconWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  permissionWalmartLogo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  permissionArrow: {
+    fontSize: 20,
+    color: '#6b7280',
+    marginHorizontal: 16,
+  },
+  permissionAppIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  permissionAppEmoji: {
+    fontSize: 20,
+  },
+  permissionModalButtons: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: '#f3f4f6',
+  },
+  permissionModalButton: {
+    flex: 1,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  permissionModalButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  permissionModalDenyText: {
+    color: '#6b7280',
+  },
+  permissionModalAllowText: {
+    color: '#0071ce',
+  },
+  permissionModalButtonSeparator: {
+    width: 1,
+    backgroundColor: '#f3f4f6',
+  },
+  
+  // Google Fit Legacy Styles
+  googleFitIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  googleFitIcon: {
+    fontSize: 24,
+  },
+  googleFitInfo: {
+    flex: 1,
+  },
+  googleFitTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#041f41',
+    marginBottom: 4,
+  },
+  googleFitDescription: {
+    fontSize: 14,
+    color: '#6b7280',
+    lineHeight: 20,
+  },
+  googleFitButton: {
+    backgroundColor: '#0071ce',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    shadowColor: '#0071ce',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  googleFitButtonConnected: {
+    backgroundColor: '#22c55e',
+    shadowColor: '#22c55e',
+  },
+  googleFitButtonLoading: {
+    backgroundColor: '#6b7280',
+    shadowColor: '#6b7280',
+  },
+  googleFitButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  googleFitButtonTextConnected: {
+    color: '#ffffff',
+  },
+  syncBadge: {
+    backgroundColor: '#dcfce7',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignSelf: 'center',
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#22c55e',
+  },
+  syncBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#16a34a',
+    textAlign: 'center',
   },
 });
