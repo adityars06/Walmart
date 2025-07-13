@@ -6,107 +6,72 @@ import {
   Modal,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
 
-type DietaryPrefKey = 'vegan' | 'lactoseIntolerant' | 'glutenFree' | 'kosher' | 'halal' | 'nutAllergy';
-
 interface UserProfile {
   name: string;
-  age: number;
-  weight: string;
+  age: string;
+  gender: string;
   height: string;
   email: string;
   phone: string;
 }
 
-type DietaryPrefs = {
-  [key in DietaryPrefKey]: boolean;
-};
-
-interface SavedCombo {
-  id: number;
-  name: string;
-  items: string;
-  calories: number;
+interface HealthData {
+  healthGoals: string[];
+  allergies: string[];
+  medicalConditions: string[];
+  personalNote: string;
 }
 
-interface UploadedReport {
-  id: number;
-  name: string;
-  date: string;
-  type: string;
+interface HealthApps {
+  googleFit: { connected: boolean; connecting: boolean };
+  appleFitness: { connected: boolean; connecting: boolean };
+  samsungHealth: { connected: boolean; connecting: boolean };
 }
 
 export default function Profile() {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isAddComboModalVisible, setIsAddComboModalVisible] = useState(false);
-  const [isDietaryEditModalVisible, setIsDietaryEditModalVisible] = useState(false);
+  const [isHealthDataModalVisible, setIsHealthDataModalVisible] = useState(false);
+  const [isAppsModalVisible, setIsAppsModalVisible] = useState(false);
 
   const [userProfile, setUserProfile] = useState<UserProfile>({
-    name: 'Sarah Johnson',
-    age: 28,
-    weight: '65 kg',
+    name: 'Peter',
+    age: '28',
+    gender: 'Male',
     height: '5\'6"',
-    email: 'sarah.johnson@email.com',
+    email: 'peter@email.com',
     phone: '+1 (555) 123-4567'
   });
 
-  const [dietaryPrefs, setDietaryPrefs] = useState<DietaryPrefs>({
-    vegan: true,
-    lactoseIntolerant: true,
-    glutenFree: false,
-    kosher: false,
-    halal: false,
-    nutAllergy: false
+  const [healthData, setHealthData] = useState<HealthData>({
+    healthGoals: ['Weight Loss', 'Better Sleep', 'Improve Health'],
+    allergies: ['Nut Allergy', 'Lactose Intolerance'],
+    medicalConditions: ['PCOS'],
+    personalNote: 'Looking to maintain a healthy lifestyle with balanced nutrition and regular exercise.'
   });
 
-  const [savedCombos, setSavedCombos] = useState<SavedCombo[]>([
-    { id: 1, name: 'Power Breakfast', items: 'Oatmeal + Banana + Almond Butter', calories: 350 },
-    { id: 2, name: 'Green Smoothie', items: 'Spinach + Mango + Coconut Milk', calories: 280 }
-  ]);
+  const [healthApps, setHealthApps] = useState<HealthApps>({
+    googleFit: { connected: true, connecting: false },
+    appleFitness: { connected: false, connecting: false },
+    samsungHealth: { connected: false, connecting: false }
+  });
 
-  const [uploadedReports, setUploadedReports] = useState<UploadedReport[]>([
+  const [uploadedReports, setUploadedReports] = useState([
     { id: 1, name: 'Health Report 2024.pdf', date: '2024-01-15', type: 'pdf' },
     { id: 2, name: 'Blood Test Results.docx', date: '2024-02-20', type: 'docx' }
   ]);
 
-  const [newCombo, setNewCombo] = useState({ name: '', items: '', calories: '' });
-
-  const handleDietaryToggle = (pref: DietaryPrefKey) => {
-    setDietaryPrefs(prev => ({ ...prev, [pref]: !prev[pref] }));
-  };
-
-  const handleAddCombo = () => {
-    if (newCombo.name && newCombo.items && newCombo.calories) {
-      setSavedCombos(prev => [...prev, {
-        id: Date.now(),
-        name: newCombo.name,
-        items: newCombo.items,
-        calories: parseInt(newCombo.calories)
-      }]);
-      setNewCombo({ name: '', items: '', calories: '' });
-      setIsAddComboModalVisible(false);
-    }
-  };
-
-  const handleDeleteCombo = (id: number) => {
-    Alert.alert(
-      'Delete Combo',
-      'Are you sure you want to delete this combo?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', style: 'destructive', onPress: () => setSavedCombos(prev => prev.filter(combo => combo.id !== id)) }
-      ]
-    );
-  };
-
-  const handleProfileUpdate = (field: keyof UserProfile, value: string | number) => {
+  const handleProfileUpdate = (field: keyof UserProfile, value: string) => {
     setUserProfile(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleHealthDataUpdate = (field: keyof HealthData, value: string | string[]) => {
+    setHealthData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleDeleteReport = (id: number) => {
@@ -120,16 +85,19 @@ export default function Profile() {
     );
   };
 
-  const getDietaryLabel = (key: string) => {
-    const labels: { [key: string]: string } = {
-      vegan: 'Vegan',
-      lactoseIntolerant: 'Lactose Intolerant',
-      glutenFree: 'Gluten Free',
-      kosher: 'Kosher',
-      halal: 'Halal',
-      nutAllergy: 'Nut Allergy'
-    };
-    return labels[key] || key;
+  const handleConnectApp = (appKey: keyof HealthApps) => {
+    setHealthApps(prev => ({
+      ...prev,
+      [appKey]: { ...prev[appKey], connecting: true }
+    }));
+    
+    // Simulate connection process
+    setTimeout(() => {
+      setHealthApps(prev => ({
+        ...prev,
+        [appKey]: { connected: true, connecting: false }
+      }));
+    }, 2000);
   };
 
   return (
@@ -165,58 +133,108 @@ export default function Profile() {
         ))}
       </View>
 
-      {/* Dietary Preferences */}
+      {/* Health Goals */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Dietary Preferences</Text>
+          <Text style={styles.sectionTitle}>Health Goals</Text>
           <TouchableOpacity
-            onPress={() => setIsDietaryEditModalVisible(true)}
+            onPress={() => setIsHealthDataModalVisible(true)}
             style={styles.primaryButton}
           >
             <Ionicons name="pencil" size={18} color="white" />
             <Text style={styles.buttonText}>Edit</Text>
           </TouchableOpacity>
         </View>
-        {Object.entries(dietaryPrefs).map(([key, value]) => (
-          <View key={key} style={styles.dietaryItem}>
-            <Text style={styles.dietaryLabel}>{getDietaryLabel(key)}</Text>
-            <Switch 
-              value={value} 
-              onValueChange={() => handleDietaryToggle(key as DietaryPrefKey)}
-              trackColor={{ false: '#ccc', true: '#FDB503' }}
-              thumbColor="#fff"
-            />
-          </View>
-        ))}
+        <View style={styles.tagsContainer}>
+          {healthData.healthGoals.map((goal, index) => (
+            <View key={index} style={styles.tag}>
+              <Text style={styles.tagText}>{goal}</Text>
+            </View>
+          ))}
+        </View>
       </View>
 
-      {/* Saved Combos */}
+      {/* Allergies */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Your Combos</Text>
+          <Text style={styles.sectionTitle}>Allergies</Text>
+        </View>
+        <View style={styles.tagsContainer}>
+          {healthData.allergies.map((allergy, index) => (
+            <View key={index} style={[styles.tag, styles.allergyTag]}>
+              <Text style={styles.tagText}>{allergy}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      {/* Medical Conditions */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Medical Conditions</Text>
+        </View>
+        <View style={styles.tagsContainer}>
+          {healthData.medicalConditions.map((condition, index) => (
+            <View key={index} style={[styles.tag, styles.medicalTag]}>
+              <Text style={styles.tagText}>{condition}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      {/* Personal Note */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Personal Note</Text>
+        </View>
+        <Text style={styles.personalNote}>{healthData.personalNote}</Text>
+      </View>
+
+      {/* Health Apps */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Connected Health Apps</Text>
           <TouchableOpacity
-            onPress={() => setIsAddComboModalVisible(true)}
+            onPress={() => setIsAppsModalVisible(true)}
             style={styles.primaryButton}
           >
-            <Ionicons name="add" size={18} color="white" />
-            <Text style={styles.buttonText}>Add</Text>
+            <Ionicons name="settings" size={18} color="white" />
+            <Text style={styles.buttonText}>Manage</Text>
           </TouchableOpacity>
         </View>
-        {savedCombos.map((combo) => (
-          <View key={combo.id} style={styles.comboItem}>
-            <View style={styles.comboHeader}>
-              <Text style={styles.comboName}>{combo.name}</Text>
-              <TouchableOpacity 
-                onPress={() => handleDeleteCombo(combo.id)} 
-                style={styles.deleteButton}
-              >
-                <Ionicons name="trash" size={16} color="#EF4444" />
-              </TouchableOpacity>
+        <View style={styles.healthAppsContainer}>
+          {Object.entries(healthApps).map(([key, app]) => (
+            <View key={key} style={[styles.healthAppCard, app.connected && styles.healthAppCardConnected]}>
+              <View style={styles.healthAppIconContainer}>
+                {key === 'googleFit' ? (
+                  <Image
+                    source={require('../../assets/images/fitness-icon/google.webp')}
+                    style={styles.healthAppIconImage}
+                    resizeMode="contain"
+                  />
+                ) : key === 'appleFitness' ? (
+                  <Image
+                    source={require('../../assets/images/fitness-icon/apple.webp')}
+                    style={styles.healthAppIconImage}
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/images/fitness-icon/samsung.png')}
+                    style={styles.healthAppIconImage}
+                    resizeMode="contain"
+                  />
+                )}
+              </View>
+              <Text style={styles.healthAppName}>
+                {key === 'googleFit' ? 'Google Fit' : key === 'appleFitness' ? 'Apple Fitness' : 'Samsung Health'}
+              </Text>
+              <Text style={[styles.healthAppStatus, app.connected && styles.healthAppStatusConnected]}>
+                {app.connecting ? 'Connecting...' : app.connected ? 'Connected' : 'Not Connected'}
+              </Text>
             </View>
-            <Text style={styles.comboItems}>{combo.items}</Text>
-            <Text style={styles.comboCalories}>{combo.calories} calories</Text>
-          </View>
-        ))}
+          ))}
+        </View>
       </View>
 
       {/* Reports Upload Section */}
@@ -278,6 +296,7 @@ export default function Profile() {
                     style={styles.input}
                     value={value.toString()}
                     onChangeText={(text) => handleProfileUpdate(key as keyof UserProfile, text)}
+                    keyboardType={key === 'age' ? 'numeric' : 'default'}
                   />
                 </View>
               ))}
@@ -294,93 +313,113 @@ export default function Profile() {
         </View>
       </Modal>
 
-      {/* Edit Dietary Preferences Modal */}
+      {/* Edit Health Data Modal */}
       <Modal
-        visible={isDietaryEditModalVisible}
+        visible={isHealthDataModalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setIsDietaryEditModalVisible(false)}
+        onRequestClose={() => setIsHealthDataModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Edit Dietary Preferences</Text>
-              <TouchableOpacity onPress={() => setIsDietaryEditModalVisible(false)}>
+              <Text style={styles.modalTitle}>Edit Health Data</Text>
+              <TouchableOpacity onPress={() => setIsHealthDataModalVisible(false)}>
                 <Ionicons name="close" size={20} color="#6B7280" />
               </TouchableOpacity>
             </View>
 
             <ScrollView style={styles.modalContent}>
-              {Object.entries(dietaryPrefs).map(([key, value]) => (
-                <View key={key} style={styles.dietaryModalItem}>
-                  <Text style={styles.dietaryModalLabel}>{getDietaryLabel(key)}</Text>
-                  <Switch 
-                    value={value} 
-                    onValueChange={() => handleDietaryToggle(key as DietaryPrefKey)}
-                    trackColor={{ false: '#ccc', true: '#FDB503' }}
-                    thumbColor="#fff"
-                  />
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Personal Note</Text>
+                <TextInput
+                  style={[styles.input, styles.textarea]}
+                  value={healthData.personalNote}
+                  onChangeText={(text) => handleHealthDataUpdate('personalNote', text)}
+                  multiline
+                  numberOfLines={4}
+                />
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setIsHealthDataModalVisible(false)}
+            >
+              <Ionicons name="save" size={18} color="white" />
+              <Text style={styles.modalButtonText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Health Apps Modal */}
+      <Modal
+        visible={isAppsModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsAppsModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modal}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Manage Health Apps</Text>
+              <TouchableOpacity onPress={() => setIsAppsModalVisible(false)}>
+                <Ionicons name="close" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalContent}>
+              {Object.entries(healthApps).map(([key, app]) => (
+                <View key={key} style={styles.appModalItem}>
+                  <View style={styles.appModalIconContainer}>
+                    {key === 'googleFit' ? (
+                      <Image
+                        source={require('../../assets/images/fitness-icon/google.webp')}
+                        style={styles.appModalIcon}
+                        resizeMode="contain"
+                      />
+                    ) : key === 'appleFitness' ? (
+                      <Image
+                        source={require('../../assets/images/fitness-icon/apple.webp')}
+                        style={styles.appModalIcon}
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <Image
+                        source={require('../../assets/images/fitness-icon/samsung.png')}
+                        style={styles.appModalIcon}
+                        resizeMode="contain"
+                      />
+                    )}
+                  </View>
+                  <View style={styles.appModalInfo}>
+                    <Text style={styles.appModalName}>
+                      {key === 'googleFit' ? 'Google Fit' : key === 'appleFitness' ? 'Apple Fitness' : 'Samsung Health'}
+                    </Text>
+                    <Text style={styles.appModalStatus}>
+                      {app.connecting ? 'Connecting...' : app.connected ? 'Connected' : 'Not Connected'}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={[styles.connectButton, app.connected && styles.connectedButton]}
+                    onPress={() => !app.connected && handleConnectApp(key as keyof HealthApps)}
+                    disabled={app.connected || app.connecting}
+                  >
+                    <Text style={[styles.connectButtonText, app.connected && styles.connectedButtonText]}>
+                      {app.connecting ? 'Connecting...' : app.connected ? 'Connected' : 'Connect'}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               ))}
             </ScrollView>
 
             <TouchableOpacity
               style={styles.modalButton}
-              onPress={() => setIsDietaryEditModalVisible(false)}
+              onPress={() => setIsAppsModalVisible(false)}
             >
-              <Ionicons name="save" size={18} color="white" />
-              <Text style={styles.modalButtonText}>Save Changes</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Add Combo Modal */}
-      <Modal
-        visible={isAddComboModalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setIsAddComboModalVisible(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modal}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add Combo</Text>
-              <TouchableOpacity onPress={() => setIsAddComboModalVisible(false)}>
-                <Ionicons name="close" size={20} color="#6B7280" />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.modalContent}>
-              <TextInput
-                placeholder="Combo Name"
-                style={styles.input}
-                value={newCombo.name}
-                onChangeText={(text) => setNewCombo({ ...newCombo, name: text })}
-              />
-              <TextInput
-                placeholder="Items"
-                style={[styles.input, styles.textarea]}
-                value={newCombo.items}
-                onChangeText={(text) => setNewCombo({ ...newCombo, items: text })}
-                multiline
-                numberOfLines={3}
-              />
-              <TextInput
-                placeholder="Calories"
-                style={styles.input}
-                value={newCombo.calories}
-                onChangeText={(text) => setNewCombo({ ...newCombo, calories: text })}
-                keyboardType="numeric"
-              />
-            </View>
-
-            <TouchableOpacity
-              onPress={handleAddCombo}
-              style={styles.modalButton}
-            >
-              <Ionicons name="add" size={18} color="white" />
-              <Text style={styles.modalButtonText}>Add Combo</Text>
+              <Ionicons name="close" size={18} color="white" />
+              <Text style={styles.modalButtonText}>Done</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -421,7 +460,7 @@ const styles = StyleSheet.create({
     borderColor: '#6cace4',
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
     marginBottom: 16,
     color: '#ffffff',
@@ -468,7 +507,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
   },
   dietaryItem: {
@@ -586,7 +625,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     color: '#ffffff',
   },
@@ -644,5 +683,123 @@ const styles = StyleSheet.create({
   dietaryModalLabel: {
     color: '#ffffff',
     fontSize: 16,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tag: {
+    backgroundColor: 'rgba(0, 113, 206, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#6cace4',
+  },
+  tagText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  allergyTag: {
+    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+    borderColor: '#EF4444',
+  },
+  medicalTag: {
+    backgroundColor: 'rgba(245, 158, 11, 0.2)',
+    borderColor: '#F59E0B',
+  },
+  personalNote: {
+    color: '#ffffff',
+    fontSize: 16,
+    lineHeight: 24,
+    fontStyle: 'italic',
+  },
+  healthAppsContainer: {
+    gap: 12,
+  },
+  healthAppCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(108, 172, 228, 0.3)',
+    alignItems: 'center',
+  },
+  healthAppCardConnected: {
+    borderColor: '#10B981',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+  },
+  healthAppIconContainer: {
+    marginBottom: 8,
+  },
+  healthAppIcon: {
+    fontSize: 32,
+  },
+  healthAppIconImage: {
+    width: 32,
+    height: 32,
+  },
+  healthAppName: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  healthAppStatus: {
+    color: '#6cace4',
+    fontSize: 10,
+  },
+  healthAppStatusConnected: {
+    color: '#10B981',
+  },
+  appModalItem: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(108, 172, 228, 0.3)',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  appModalIconContainer: {
+    marginRight: 12,
+  },
+  appModalIcon: {
+    width: 24,
+    height: 24,
+  },
+  appModalInfo: {
+    flex: 1,
+  },
+  appModalName: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  appModalStatus: {
+    color: '#6cace4',
+    fontSize: 10,
+  },
+  connectButton: {
+    backgroundColor: '#0071ce',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  connectedButton: {
+    backgroundColor: '#10B981',
+  },
+  connectButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  connectedButtonText: {
+    color: 'white',
   },
 });
