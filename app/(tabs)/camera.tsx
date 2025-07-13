@@ -116,6 +116,14 @@ export default function Camera() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#041f41" />
       
+      {/* Background Shapes */}
+      <View style={styles.backgroundShapes}>
+        <View style={[styles.shape, styles.shape1]} />
+        <View style={[styles.shape, styles.shape2]} />
+        <View style={[styles.shape, styles.shape3]} />
+        <View style={[styles.shape, styles.shape4]} />
+      </View>
+      
       {/* Show Processing/Preview if Photo Taken */}
       {photoUri ? (
         <View style={styles.previewContainer}>
@@ -217,6 +225,50 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#041f41',
+  },
+  
+  // Background Shapes
+  backgroundShapes: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
+  },
+  shape: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 20,
+  },
+  shape1: {
+    width: 120,
+    height: 120,
+    top: 100,
+    left: -40,
+    transform: [{ rotate: '45deg' }],
+  },
+  shape2: {
+    width: 80,
+    height: 80,
+    top: 250,
+    right: -20,
+    borderRadius: 40,
+  },
+  shape3: {
+    width: 100,
+    height: 100,
+    bottom: 200,
+    left: 20,
+    transform: [{ rotate: '30deg' }],
+  },
+  shape4: {
+    width: 60,
+    height: 60,
+    top: 400,
+    right: 50,
+    borderRadius: 30,
+    transform: [{ rotate: '60deg' }],
   },
   
   // Permission Styles
