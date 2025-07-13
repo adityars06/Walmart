@@ -197,7 +197,7 @@ export default function UserInfo() {
       key: 'googleFit',
       name: 'googlefit', 
       displayName: 'Google Fit', 
-      image: require('../assets/images/fitness-icon/google.png'),
+      image: require('../assets/images/fitness-icon/google.webp'),
       color: '#4285F4' 
     },
     { 
@@ -571,7 +571,7 @@ export default function UserInfo() {
                 <View style={styles.permissionAppIcon}>
                   <Image 
                     source={
-                      selectedApp?.name === 'googlefit' ? require('../assets/images/fitness-icon/google.png') :
+                      selectedApp?.name === 'googlefit' ? require('../assets/images/fitness-icon/google.webp') :
                       selectedApp?.name === 'applefitness' ? require('../assets/images/fitness-icon/apple.webp') :
                       selectedApp?.name === 'samsunghealth' ? require('../assets/images/fitness-icon/samsung.png') :
                       undefined
