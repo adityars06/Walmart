@@ -98,14 +98,6 @@ export default function Camera() {
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        {/* Background Shapes */}
-        <View style={styles.backgroundShapes}>
-          <View style={[styles.shape, styles.shape1]} />
-          <View style={[styles.shape, styles.shape2]} />
-          <View style={[styles.shape, styles.shape3]} />
-          <View style={[styles.shape, styles.shape4]} />
-        </View>
-        
         <StatusBar barStyle="light-content" backgroundColor="#041f41" />
         <View style={styles.permissionCard}>
           <Text style={styles.permissionTitle}>Camera Access Required</Text>
@@ -122,14 +114,6 @@ export default function Camera() {
 
   return (
     <View style={styles.container}>
-      {/* Background Shapes - Same as index.tsx */}
-      <View style={styles.backgroundShapes}>
-        <View style={[styles.shape, styles.shape1]} />
-        <View style={[styles.shape, styles.shape2]} />
-        <View style={[styles.shape, styles.shape3]} />
-        <View style={[styles.shape, styles.shape4]} />
-      </View>
-      
       <StatusBar barStyle="light-content" backgroundColor="#041f41" />
       
       {/* Show Processing/Preview if Photo Taken */}
@@ -235,50 +219,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#041f41',
   },
   
-  // Background Shapes - Same as index.tsx
-  backgroundShapes: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 0,
-  },
-  shape: {
-    position: 'absolute',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 20,
-  },
-  shape1: {
-    width: 120,
-    height: 120,
-    top: 100,
-    left: -40,
-    transform: [{ rotate: '45deg' }],
-  },
-  shape2: {
-    width: 80,
-    height: 80,
-    top: 250,
-    right: -20,
-    borderRadius: 40,
-  },
-  shape3: {
-    width: 100,
-    height: 100,
-    bottom: 200,
-    left: 20,
-    transform: [{ rotate: '30deg' }],
-  },
-  shape4: {
-    width: 60,
-    height: 60,
-    top: 400,
-    right: 50,
-    borderRadius: 30,
-    transform: [{ rotate: '60deg' }],
-  },
-  
   // Permission Styles
   permissionContainer: {
     flex: 1,
@@ -298,7 +238,6 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 10,
     maxWidth: 350,
-    zIndex: 10,
   },
   permissionTitle: {
     fontSize: 24,
@@ -334,7 +273,6 @@ const styles = StyleSheet.create({
   // Camera Container
   cameraContainer: {
     flex: 1,
-    zIndex: 5,
   },
   
   // Header Styles
@@ -543,7 +481,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 30,
-    zIndex: 5,
   },
   previewHeader: {
     alignItems: 'center',

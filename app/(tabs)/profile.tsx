@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   Alert,
+  Image,
   Modal,
   ScrollView,
   StyleSheet,
@@ -133,25 +134,29 @@ export default function Profile() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
+      {/* Header with Walmart Logo */}
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <View style={styles.avatar}>
-            <Ionicons name="person" size={28} color="#1E40AF" />
-          </View>
-          <Text style={styles.title}>Profile</Text>
-        </View>
-        <TouchableOpacity 
-          onPress={() => setIsEditModalVisible(true)}
-          style={styles.headerButton}
-        >
-          <Ionicons name="pencil" size={20} color="#1D4ED8" />
-        </TouchableOpacity>
+        <Image
+          source={{
+            uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Walmart_logo.svg/1280px-Walmart_logo.svg.png",
+          }}
+          style={styles.walmartLogo}
+          resizeMode="contain"
+        />
+        <Text style={styles.headerTitle}>My Profile</Text>
       </View>
 
       {/* Personal Info */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Personal Information</Text>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Personal Information</Text>
+          <TouchableOpacity 
+            onPress={() => setIsEditModalVisible(true)}
+            style={styles.editButton}
+          >
+            <Ionicons name="pencil" size={18} color="#0071ce" />
+          </TouchableOpacity>
+        </View>
         {Object.entries(userProfile).map(([key, value]) => (
           <View key={key} style={styles.infoItem}>
             <Text style={styles.infoLabel}>{key.charAt(0).toUpperCase() + key.slice(1)}</Text>
@@ -387,62 +392,39 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6F3FF',
-    padding: 24,
+    backgroundColor: '#041f41',
+    padding: 20,
   },
   header: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    marginBottom: 24,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    paddingVertical: 30,
+    paddingTop: 60,
+    marginBottom: 30,
   },
-  headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
+  walmartLogo: {
+    width: 150,
+    height: 60,
+    marginBottom: 15,
   },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#FEF3C7',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#1E3A8A',
-  },
-  headerButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#DBEAFE',
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
   },
   section: {
-    backgroundColor: 'white',
-    padding: 24,
-    borderRadius: 8,
-    marginBottom: 24,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    backgroundColor: '#ffffff15',
+    padding: 20,
+    borderRadius: 15,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#6cace4',
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginBottom: 16,
-    color: '#1E3A8A',
+    color: '#ffffff',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -450,26 +432,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
+  editButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0, 113, 206, 0.2)',
+    borderWidth: 1,
+    borderColor: '#6cace4',
+  },
   infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: 'rgba(108, 172, 228, 0.3)',
   },
   infoLabel: {
-    color: '#64748B',
+    color: '#6cace4',
     textTransform: 'capitalize',
   },
   infoValue: {
     fontWeight: '500',
-    color: '#1E3A8A',
+    color: '#ffffff',
   },
   primaryButton: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: '#0071ce',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
@@ -486,24 +475,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: 'rgba(108, 172, 228, 0.3)',
   },
   dietaryLabel: {
-    color: '#1E3A8A',
+    color: '#ffffff',
     fontSize: 16,
   },
   comboItem: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: 'rgba(108, 172, 228, 0.3)',
   },
   comboHeader: {
     flexDirection: 'row',
@@ -513,7 +502,7 @@ const styles = StyleSheet.create({
   },
   comboName: {
     fontWeight: '600',
-    color: '#1E3A8A',
+    color: '#ffffff',
     fontSize: 16,
   },
   deleteButton: {
@@ -521,21 +510,21 @@ const styles = StyleSheet.create({
   },
   comboItems: {
     fontSize: 14,
-    color: '#64748B',
+    color: '#6cace4',
     marginBottom: 4,
   },
   comboCalories: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#D97706',
+    color: '#ffc220',
   },
   reportItem: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: 'rgba(108, 172, 228, 0.3)',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -551,12 +540,12 @@ const styles = StyleSheet.create({
   },
   reportName: {
     fontWeight: '600',
-    color: '#1E3A8A',
+    color: '#ffffff',
     fontSize: 16,
   },
   reportDate: {
     fontSize: 14,
-    color: '#64748B',
+    color: '#6cace4',
   },
   emptyState: {
     alignItems: 'center',
@@ -565,28 +554,30 @@ const styles = StyleSheet.create({
   emptyText: {
     marginTop: 8,
     marginBottom: 4,
-    color: '#64748B',
+    color: '#6cace4',
     fontSize: 16,
     fontWeight: '500',
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#64748B',
+    color: '#6cace4',
     textAlign: 'center',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(4, 31, 65, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
   },
   modal: {
-    backgroundColor: 'white',
-    borderRadius: 8,
+    backgroundColor: '#041f41',
+    borderRadius: 15,
     padding: 24,
     width: '100%',
     maxHeight: '80%',
+    borderWidth: 2,
+    borderColor: '#6cace4',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -597,7 +588,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1E3A8A',
+    color: '#ffffff',
   },
   modalContent: {
     gap: 16,
@@ -607,16 +598,18 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    color: '#64748B',
+    color: '#6cace4',
     textTransform: 'capitalize',
     marginBottom: 4,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#93C5FD',
-    borderRadius: 6,
+    borderColor: '#6cace4',
+    borderRadius: 8,
     padding: 12,
     fontSize: 14,
+    color: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
   textarea: {
     height: 80,
@@ -624,7 +617,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     marginTop: 24,
-    backgroundColor: '#1D4ED8',
+    backgroundColor: '#0071ce',
     padding: 12,
     borderRadius: 8,
     flexDirection: 'row',
@@ -641,15 +634,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#DBEAFE',
+    borderColor: 'rgba(108, 172, 228, 0.3)',
   },
   dietaryModalLabel: {
-    color: '#1E3A8A',
+    color: '#ffffff',
     fontSize: 16,
   },
 });
