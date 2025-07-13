@@ -11,12 +11,12 @@ export default function TabLayout() {
     }
   }}>
     <Tabs.Screen name="home" options={{ headerShown: false, tabBarLabel:'Home',
- tabBarIcon: ({focused }) => <Ionicons name={focused ? 'home-sharp' : 'home-outline'}  size={26} color="black" /> }} />
+ tabBarIcon: ({focused }) => <Ionicons name={focused ? 'storefront' : 'storefront-outline'}  size={26} color="black" /> }} />
     <Tabs.Screen name="camera" options={{ headerShown: false, tabBarLabel:'Scan',
-      tabBarIcon:({focused})=> <Ionicons name={focused ? 'camera-sharp' : 'camera-outline'} size={26} color="black" />
+      tabBarIcon:({focused})=> <Ionicons name={focused ? 'scan' : 'scan-outline'} size={26} color="black" />
      }} />
     <Tabs.Screen name="profile" options={{ headerShown: false, tabBarLabel:'Profile',
-      tabBarIcon:({focused})=> <Ionicons name={focused ? 'person-sharp' : 'person-outline'} size={26} color="black" />
+      tabBarIcon:({focused})=> <Ionicons name={focused ? 'person-circle' : 'person-circle-outline'} size={26} color="black" />
      }} />
      
     </Tabs>;
