@@ -197,21 +197,21 @@ export default function UserInfo() {
       key: 'googleFit',
       name: 'googlefit', 
       displayName: 'Google Fit', 
-      icon: '🏃‍♂️', 
+      image: require('../assets/images/fitness-icon/google.png'),
       color: '#4285F4' 
     },
     { 
       key: 'appleFitness',
       name: 'applefitness', 
       displayName: 'Apple Fitness', 
-      icon: '🍎', 
+      image: require('../assets/images/fitness-icon/apple.webp'),
       color: '#000000' 
     },
     { 
       key: 'samsungHealth',
       name: 'samsunghealth', 
       displayName: 'Samsung Health', 
-      icon: '💚', 
+      image: require('../assets/images/fitness-icon/samsung.png'),
       color: '#1BA1E2' 
     }
   ];
@@ -473,8 +473,12 @@ export default function UserInfo() {
                 onPress={() => handleHealthAppConnect(app)}
                 disabled={appState.connected || appState.connecting}
               >
-                <View style={[styles.healthAppIconContainer, { backgroundColor: app.color }]}>
-                  <Text style={styles.healthAppIcon}>{app.icon}</Text>
+                <View style={styles.healthAppIconContainer}>
+                  <Image 
+                    source={app.image}
+                    style={styles.healthAppIcon}
+                    resizeMode="cover"
+                  />
                 </View>
                 <Text style={styles.healthAppName}>{app.displayName}</Text>
                 <View style={styles.healthAppStatus}>
@@ -565,11 +569,16 @@ export default function UserInfo() {
                 />
                 <Text style={styles.permissionArrow}>→</Text>
                 <View style={styles.permissionAppIcon}>
-                  <Text style={styles.permissionAppEmoji}>
-                    {selectedApp?.name === 'googlefit' && '🏃‍♂️'}
-                    {selectedApp?.name === 'applefitness' && '🍎'}
-                    {selectedApp?.name === 'samsunghealth' && '💚'}
-                  </Text>
+                  <Image 
+                    source={
+                      selectedApp?.name === 'googlefit' ? require('../assets/images/fitness-icon/google.png') :
+                      selectedApp?.name === 'applefitness' ? require('../assets/images/fitness-icon/apple.webp') :
+                      selectedApp?.name === 'samsunghealth' ? require('../assets/images/fitness-icon/samsung.png') :
+                      undefined
+                    }
+                    style={styles.permissionAppImage}
+                    resizeMode="cover"
+                  />
                 </View>
               </View>
               
@@ -936,9 +945,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   healthAppIcon: {
-    fontSize: 24,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
   },
   healthAppName: {
     fontSize: 12,
@@ -1018,6 +1034,16 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  permissionAppImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   permissionAppEmoji: {
     fontSize: 20,
