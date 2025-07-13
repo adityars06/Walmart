@@ -51,7 +51,7 @@ export default function Profile() {
   const [healthData, setHealthData] = useState<HealthData>({
     healthGoals: ['Weight Loss', 'Better Sleep', 'Improve Health'],
     allergies: ['Nut Allergy', 'Lactose Intolerance'],
-    medicalConditions: ['PCOS'],
+    medicalConditions: ['Cholestrol'],
     personalNote: 'Looking to maintain a healthy lifestyle with balanced nutrition and regular exercise.'
   });
 
