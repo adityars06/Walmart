@@ -229,23 +229,6 @@ const ProductSection = ({ title, products, showCountdown = false }: {
   );
 };
 
-// Event Card Component
-const EventCard = ({ event }: { event: any }) => {
-  return (
-    <TouchableOpacity style={styles.eventCard}>
-      <Image source={{ uri: event.image }} style={styles.eventImage} />
-      <View style={styles.eventOverlay}>
-        <Text style={styles.eventTitle}>{event.title}</Text>
-        <Text style={styles.eventDate}>{event.date}</Text>
-        <Text style={styles.eventLocation}>{event.location}</Text>
-      </View>
-      <View style={styles.eventActionButton}>
-        <Text style={styles.eventActionText}>Join Event</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
 // Main Tailored Section Component
 export default function TailoredSection() {
   const router = useRouter();
@@ -264,7 +247,7 @@ export default function TailoredSection() {
       name: 'Electrolyte Drink',
       brand: 'Gatorade',
       price: '$4.99',
-      image: require('../assets/images/need of the hour/gatorade.avif'),
+      image: require('../assets/images/need of the hour/gatorade.jpeg'),
     },
     {
       id: 3,
@@ -409,30 +392,6 @@ export default function TailoredSection() {
     },
   ];
 
-  const communityEvents = [
-    {
-      id: 1,
-      title: 'Red Bull Cycle Trail',
-      date: 'July 25, 2025',
-      location: 'Sacramento Park',
-      image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop',
-    },
-    {
-      id: 2,
-      title: 'Run for Celiac',
-      date: 'August 10, 2025',
-      location: 'Downtown Sacramento',
-      image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5d?w=300&h=200&fit=crop',
-    },
-    {
-      id: 3,
-      title: 'Walmart Weekly Wellness Rides',
-      date: 'Every Saturday',
-      location: 'Various Locations',
-      image: 'https://images.unsplash.com/photo-1517654443271-21d8c2d28dd8?w=300&h=200&fit=crop',
-    },
-  ];
-
   return (
     <View style={styles.container}>
       {/* Walmart Logo Header */}
@@ -469,20 +428,6 @@ export default function TailoredSection() {
         <View style={styles.onlineSection}>
           <Text style={styles.onlineHeadline}>Hot picks, just not on the shelf — order online now!</Text>
           <ProductSection title="" products={onlineOnlyProducts} />
-        </View>
-
-        {/* Community Events */}
-        <View style={styles.eventsSection}>
-          <Text style={styles.sectionTitle}>Community Events You'll Love</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScrollContent}
-          >
-            {communityEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </ScrollView>
         </View>
       </ScrollView>
     </View>
@@ -808,62 +753,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     lineHeight: 24,
-  },
-
-  // Events Section Styles
-  eventsSection: {
-    marginBottom: 30,
-  },
-  eventCard: {
-    backgroundColor: '#ffffff15',
-    borderRadius: 15,
-    marginRight: 15,
-    width: 300,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#6cace4',
-  },
-  eventImage: {
-    width: '100%',
-    height: 160,
-  },
-  eventOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(4, 31, 65, 0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  eventTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  eventDate: {
-    fontSize: 14,
-    color: '#ffc220',
-    marginBottom: 4,
-  },
-  eventLocation: {
-    fontSize: 12,
-    color: '#6cace4',
-    marginBottom: 15,
-  },
-  eventActionButton: {
-    backgroundColor: '#0071ce',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  eventActionText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#ffffff',
   },
 });

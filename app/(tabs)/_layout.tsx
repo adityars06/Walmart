@@ -15,6 +15,9 @@ export default function TabLayout() {
     <Tabs.Screen name="camera" options={{ headerShown: false, tabBarLabel:'Scan',
       tabBarIcon:({focused})=> <Ionicons name={focused ? 'scan' : 'scan-outline'} size={26} color="black" />
      }} />
+    <Tabs.Screen name="community" options={{ headerShown: false, tabBarLabel:'Community',
+      tabBarIcon:({focused})=> <Ionicons name={focused ? 'people' : 'people-outline'} size={26} color="black" />
+     }} />
     <Tabs.Screen name="profile" options={{ headerShown: false, tabBarLabel:'Profile',
       tabBarIcon:({focused})=> <Ionicons name={focused ? 'person-circle' : 'person-circle-outline'} size={26} color="black" />
      }} />

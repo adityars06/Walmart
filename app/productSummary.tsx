@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Alert,
     Dimensions,
     Image,
+    Modal,
     ScrollView,
     StyleSheet,
     Text,
@@ -16,6 +17,7 @@ const { width } = Dimensions.get('window');
 
 export default function ProductSummary() {
   const router = useRouter();
+  const [showInfoModal, setShowInfoModal] = useState(false);
   
   const handleGoBack = () => {
     router.back();
@@ -26,11 +28,15 @@ export default function ProductSummary() {
   };
 
   const handleAddToCart = () => {
-    Alert.alert('Added to Cart', 'Saltes Butter added to your cart with 10% discount!');
+    Alert.alert('Added to Cart', 'Safer baby lotion alternative added to your cart!');
   };
 
   const handleCheckAnother = () => {
     Alert.alert('Scanner', 'Opening camera to scan another product...');
+  };
+
+  const handleInfoPress = () => {
+    setShowInfoModal(true);
   };
 
   return (
@@ -38,7 +44,7 @@ export default function ProductSummary() {
       {/* Top Bar */}
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color="#041f41" />
         </TouchableOpacity>
         
         <Image
@@ -57,14 +63,14 @@ export default function ProductSummary() {
           <View style={styles.productHeader}>
             <Image
               source={{
-                uri: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?w=200&h=200&fit=crop"
+                uri: "https://m.media-amazon.com/images/I/51ffcjn8NlL.jpg"
               }}
               style={styles.productImage}
             />
             <View style={styles.productInfo}>
-              <Text style={styles.productName}>Jif Creamy Peanut Butter</Text>
-              <Text style={styles.productBrand}>18 oz jar • Natural</Text>
-              <Text style={styles.productPrice}>$4.98</Text>
+              <Text style={styles.productName}>Johnson's Baby Lotion</Text>
+              <Text style={styles.productBrand}>15 fl oz • Gentle & Mild</Text>
+              <Text style={styles.productPrice}>$5.49</Text>
             </View>
             <View style={styles.productBadge}>
               <Ionicons name="checkmark-circle" size={20} color="#10B981" />
@@ -83,80 +89,161 @@ export default function ProductSummary() {
               <Text style={styles.alertTitle}>Health Alert</Text>
               <Text style={styles.alertSubtitle}>Not recommended for you</Text>
             </View>
+            <TouchableOpacity style={styles.infoButton} onPress={handleInfoPress}>
+              <Ionicons name="information-circle-outline" size={24} color="#EF4444" />
+            </TouchableOpacity>
           </View>
           <View style={styles.alertContent}>
-            <Text style={styles.alertText}>❌ This contains dairy and nuts</Text>
+            <Text style={styles.alertText}>❌ This contains potentially harmful ingredients</Text>
             <Text style={styles.alertDescription}>
-              Based on your health profile, this product contains allergens that may affect you.
+              Based on your health profile, this product may contain chemicals not suitable for sensitive baby skin.
             </Text>
           </View>
         </View>
 
-        {/* Better Alternative */}
+        {/* Better Alternatives */}
         <View style={styles.recommendationCard}>
           <View style={styles.recommendationHeader}>
             <View style={styles.recommendationIconContainer}>
               <Ionicons name="checkmark-circle" size={24} color="#10B981" />
             </View>
             <View style={styles.recommendationTitleContainer}>
-              <Text style={styles.recommendationTitle}>Recommended Alternative</Text>
-              <Text style={styles.recommendationSubtitle}>Perfect match for your needs</Text>
+              <Text style={styles.recommendationTitle}>Safer Alternatives</Text>
+              <Text style={styles.recommendationSubtitle}>Better for sensitive baby skin</Text>
             </View>
           </View>
           
-          <View style={styles.alternativeProduct}>
-            <Image
-              source={{
-                uri: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=200&h=200&fit=crop"
-              }}
-              style={styles.alternativeImage}
-            />
-            <View style={styles.alternativeInfo}>
-              <Text style={styles.alternativeText}>✅ Salted Butter - Natural</Text>
-              <Text style={styles.alternativeBrand}>Justin's • 16 oz</Text>
-              <View style={styles.priceContainer}>
-                <Text style={styles.alternativePrice}>$8.49</Text>
-                <View style={styles.discountBadge}>
-                  <Text style={styles.discountText}>10% OFF</Text>
-                </View>
-              </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.alternativesScroll}>
+            <View style={styles.alternativeItem}>
+              <Image
+                source={{
+                  uri: "https://m.media-amazon.com/images/I/61Q0lc371ZL._UF894,1000_QL80_.jpg"
+                }}
+                style={styles.alternativeImage}
+              />
+              <Text style={styles.alternativeName}>Aveeno Baby Daily Moisture</Text>
+              <Text style={styles.alternativeBrand}>Aveeno • 18 fl oz</Text>
+              <Text style={styles.alternativeFeatures}>🌿 Fragrance-free, paraben-free</Text>
+              <Text style={styles.alternativePrice}>$8.99</Text>
             </View>
-          </View>
+            
+            <View style={styles.alternativeItem}>
+              <Image
+                source={{
+                  uri: "https://images.mamaearth.in/catalog/product/2/1/21441_rcocrweybxmahsa1_white_bg.jpg?format=auto&height=600"
+                }}
+                style={styles.alternativeImage}
+              />
+              <Text style={styles.alternativeName}>Mamaearth Baby Lotion</Text>
+              <Text style={styles.alternativeBrand}>Mamaearth • 400ml</Text>
+              <Text style={styles.alternativeFeatures}>🌿 Shea butter, calendula, aloe</Text>
+              <Text style={styles.alternativePrice}>$7.49</Text>
+            </View>
+            
+            <View style={styles.alternativeItem}>
+              <Image
+                source={{
+                  uri: "https://m.media-amazon.com/images/I/71CcOCW2y8L.jpg"
+                }}
+                style={styles.alternativeImage}
+              />
+              <Text style={styles.alternativeName}>Sebamed Baby Lotion</Text>
+              <Text style={styles.alternativeBrand}>Sebamed • 13.5 fl oz</Text>
+              <Text style={styles.alternativeFeatures}>🌿 pH 5.5, eczema-friendly</Text>
+              <Text style={styles.alternativePrice}>$12.99</Text>
+            </View>
+            
+            <View style={styles.alternativeItem}>
+              <Image
+                source={{
+                  uri: "https://m.media-amazon.com/images/I/51ZqVC2RQ7L._UF894,1000_QL80_.jpg"
+                }}
+                style={styles.alternativeImage}
+              />
+              <Text style={styles.alternativeName}>The Moms Co. Natural</Text>
+              <Text style={styles.alternativeBrand}>The Moms Co. • 200ml</Text>
+              <Text style={styles.alternativeFeatures}>🌿 USDA organic, toxin-free</Text>
+              <Text style={styles.alternativePrice}>$9.99</Text>
+            </View>
+            
+            <View style={styles.alternativeItem}>
+              <Image
+                source={{
+                  uri: "https://m.media-amazon.com/images/I/61oXJROzJKL._UF1000,1000_QL80_.jpg"
+                }}
+                style={styles.alternativeImage}
+              />
+              <Text style={styles.alternativeName}>Cetaphil Baby Daily</Text>
+              <Text style={styles.alternativeBrand}>Cetaphil • 13.5 fl oz</Text>
+              <Text style={styles.alternativeFeatures}>🌿 Hypoallergenic, calendula</Text>
+              <Text style={styles.alternativePrice}>$8.49</Text>
+            </View>
+          </ScrollView>
         </View>
 
-        {/* Complementary Products */}
-        <View style={styles.suggestionsCard}>
-          <Text style={styles.suggestionsTitle}>Frequently bought together</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.suggestionsScroll}>
-            <View style={styles.suggestionItem}>
+        {/* Frequently Bought Together */}
+        <View style={styles.frequentlyBoughtCard}>
+          <Text style={styles.frequentlyBoughtTitle}>Frequently Bought Together</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.frequentlyBoughtScroll}>
+            <View style={styles.frequentlyBoughtItem}>
+              <View style={styles.discountBadge}>
+                <Text style={styles.discountText}>15% OFF</Text>
+              </View>
               <Image
                 source={{
-                  uri: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=120&h=120&fit=crop"
+                  uri: "https://m.media-amazon.com/images/I/61PixFeG93L.jpg"
                 }}
-                style={styles.suggestionImage}
+                style={styles.frequentlyBoughtImage}
               />
-              <Text style={styles.suggestionText}>Whole Wheat Bread</Text>
-              <Text style={styles.suggestionPrice}>$2.98</Text>
+              <Text style={styles.frequentlyBoughtName}>Aveeno Baby Wash</Text>
+              <Text style={styles.frequentlyBoughtBrand}>Aveeno • 18 fl oz</Text>
+              <Text style={styles.frequentlyBoughtFeatures}>🌿 Tear-free, soap-free</Text>
+              <Text style={styles.frequentlyBoughtPrice}>$6.99</Text>
             </View>
-            <View style={styles.suggestionItem}>
+            <View style={styles.frequentlyBoughtItem}>
+              <View style={styles.discountBadge}>
+                <Text style={styles.discountText}>20% OFF</Text>
+              </View>
               <Image
                 source={{
-                  uri: "https://images.unsplash.com/photo-1571212515416-6bf6ca2f5847?w=120&h=120&fit=crop"
+                  uri: "https://images.mamaearth.in/catalog/product/b/a/baby_wipes_01_fop_white_bg.jpg?format=auto&height=600"
                 }}
-                style={styles.suggestionImage}
+                style={styles.frequentlyBoughtImage}
               />
-              <Text style={styles.suggestionText}>Organic Honey</Text>
-              <Text style={styles.suggestionPrice}>$6.99</Text>
+              <Text style={styles.frequentlyBoughtName}>Mamaearth Baby Wipes</Text>
+              <Text style={styles.frequentlyBoughtBrand}>Mamaearth • 80 wipes</Text>
+              <Text style={styles.frequentlyBoughtFeatures}>🌿 Plant-based, biodegradable</Text>
+              <Text style={styles.frequentlyBoughtPrice}>$4.99</Text>
             </View>
-            <View style={styles.suggestionItem}>
+            <View style={styles.frequentlyBoughtItem}>
+              <View style={styles.discountBadge}>
+                <Text style={styles.discountText}>10% OFF</Text>
+              </View>
               <Image
                 source={{
-                  uri: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=120&h=120&fit=crop"
+                  uri: "https://m.media-amazon.com/images/I/71CcOCW2y8L.jpg"
                 }}
-                style={styles.suggestionImage}
+                style={styles.frequentlyBoughtImage}
               />
-              <Text style={styles.suggestionText}>Banana</Text>
-              <Text style={styles.suggestionPrice}>$1.48/lb</Text>
+              <Text style={styles.frequentlyBoughtName}>Sebamed Baby Cream</Text>
+              <Text style={styles.frequentlyBoughtBrand}>Sebamed • 6.8 fl oz</Text>
+              <Text style={styles.frequentlyBoughtFeatures}>🌿 pH 5.5, dermatologist tested</Text>
+              <Text style={styles.frequentlyBoughtPrice}>$8.49</Text>
+            </View>
+            <View style={styles.frequentlyBoughtItem}>
+              <View style={styles.discountBadge}>
+                <Text style={styles.discountText}>25% OFF</Text>
+              </View>
+              <Image
+                source={{
+                  uri: "https://m.media-amazon.com/images/I/51ZqVC2RQ7L._UF894,1000_QL80_.jpg"
+                }}
+                style={styles.frequentlyBoughtImage}
+              />
+              <Text style={styles.frequentlyBoughtName}>Baby Massage Oil</Text>
+              <Text style={styles.frequentlyBoughtBrand}>The Moms Co. • 200ml</Text>
+              <Text style={styles.frequentlyBoughtFeatures}>🌿 Organic, vitamin E enriched</Text>
+              <Text style={styles.frequentlyBoughtPrice}>$7.99</Text>
             </View>
           </ScrollView>
         </View>
@@ -170,26 +257,62 @@ export default function ProductSummary() {
           
           <TouchableOpacity style={styles.primaryButton} onPress={handleAddToCart}>
             <Ionicons name="cart" size={18} color="#ffffff" />
-            <Text style={styles.primaryButtonText}>Add Almond Butter</Text>
+            <Text style={styles.primaryButtonText}>Add Safer Alternative</Text>
           </TouchableOpacity>
         </View>
 
         {/* Quick Actions */}
         <View style={styles.quickActions}>
           <TouchableOpacity style={styles.quickActionButton} onPress={handleCheckAnother}>
-            <Ionicons name="scan" size={20} color="#6cace4" />
+            <Ionicons name="scan" size={20} color="#6c757d" />
             <Text style={styles.quickActionText}>Scan Another</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.quickActionButton}>
-            <Ionicons name="heart-outline" size={20} color="#6cace4" />
+            <Ionicons name="heart-outline" size={20} color="#6c757d" />
             <Text style={styles.quickActionText}>Save Alternative</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.quickActionButton}>
-            <Ionicons name="share-outline" size={20} color="#6cace4" />
+            <Ionicons name="share-outline" size={20} color="#6c757d" />
             <Text style={styles.quickActionText}>Share Results</Text>
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Info Modal */}
+      <Modal
+        visible={showInfoModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowInfoModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <View style={styles.modalIconContainer}>
+                <Ionicons name="warning" size={28} color="#EF4444" />
+              </View>
+              <Text style={styles.modalTitle}>Why is this harmful?</Text>
+              <TouchableOpacity 
+                style={styles.modalCloseButton} 
+                onPress={() => setShowInfoModal(false)}
+              >
+                <Ionicons name="close" size={24} color="#6c757d" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.modalBody}>
+              <Text style={styles.modalText}>
+                Contains parabens and artificial fragrance, which can irritate sensitive baby skin.
+              </Text>
+            </View>
+            <TouchableOpacity 
+              style={styles.modalButton} 
+              onPress={() => setShowInfoModal(false)}
+            >
+              <Text style={styles.modalButtonText}>Got it</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -197,7 +320,7 @@ export default function ProductSummary() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#041f41',
+    backgroundColor: '#ffffff',
   },
   topBar: {
     flexDirection: 'row',
@@ -206,7 +329,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 20,
     paddingBottom: 10,
-    backgroundColor: '#041f41',
+    backgroundColor: '#ffffff',
   },
   backButton: {
     flexDirection: 'row',
@@ -215,7 +338,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   backText: {
-    color: '#ffffff',
+    color: '#041f41',
     fontSize: 14,
     fontWeight: '500',
     marginLeft: 8,
@@ -230,12 +353,12 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   productCard: {
-    backgroundColor: '#ffffff15',
+    backgroundColor: '#f8f9fa',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#6cace4',
+    borderColor: '#e9ecef',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -247,8 +370,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   productImage: {
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 120,
     borderRadius: 12,
     marginRight: 16,
   },
@@ -258,18 +381,18 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#ffffff',
+    color: '#041f41',
     marginBottom: 4,
   },
   productBrand: {
     fontSize: 14,
-    color: '#6cace4',
+    color: '#6c757d',
     marginBottom: 6,
   },
   productPrice: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffc220',
+    color: '#0071ce',
   },
   productBadge: {
     alignItems: 'center',
@@ -287,7 +410,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   alertCard: {
-    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    backgroundColor: '#fff5f5',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
@@ -311,6 +434,11 @@ const styles = StyleSheet.create({
   alertTitleContainer: {
     flex: 1,
   },
+  infoButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+  },
   alertTitle: {
     fontSize: 18,
     fontWeight: '700',
@@ -327,17 +455,17 @@ const styles = StyleSheet.create({
   },
   alertText: {
     fontSize: 16,
-    color: '#ffffff',
+    color: '#041f41',
     marginBottom: 8,
     fontWeight: '600',
   },
   alertDescription: {
     fontSize: 14,
-    color: '#6cace4',
+    color: '#6c757d',
     lineHeight: 20,
   },
   recommendationCard: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: '#f0fff4',
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
@@ -372,91 +500,131 @@ const styles = StyleSheet.create({
     color: '#10B981',
     opacity: 0.8,
   },
-  alternativeProduct: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  alternativesScroll: {
+    marginHorizontal: -20,
+    paddingHorizontal: 20,
+  },
+  alternativeItem: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+    padding: 12,
+    marginRight: 16,
+    width: 180,
+    borderWidth: 1,
+    borderColor: '#10B981',
   },
   alternativeImage: {
-    width: 80,
-    height: 80,
+    width: 110,
+    height: 150,
     borderRadius: 12,
-    marginRight: 16,
+    marginBottom: 8,
+    alignSelf: 'center',
   },
-  alternativeInfo: {
-    flex: 1,
-  },
-  alternativeText: {
-    fontSize: 16,
-    color: '#ffffff',
+  alternativeName: {
+    fontSize: 14,
     fontWeight: '600',
+    color: '#041f41',
     marginBottom: 4,
+    textAlign: 'center',
   },
   alternativeBrand: {
-    fontSize: 14,
-    color: '#6cace4',
+    fontSize: 12,
+    color: '#6c757d',
     marginBottom: 8,
+    textAlign: 'center',
+  },
+  alternativeFeatures: {
+    fontSize: 11,
+    color: '#10B981',
+    marginBottom: 8,
+    textAlign: 'center',
+    lineHeight: 14,
   },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   alternativePrice: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffc220',
+    color: '#0071ce',
+    textAlign: 'center',
   },
   discountBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
     backgroundColor: '#ffc220',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    zIndex: 1,
   },
   discountText: {
     fontSize: 12,
     fontWeight: 'bold',
     color: '#041f41',
   },
-  suggestionsCard: {
-    backgroundColor: '#ffffff15',
+  frequentlyBoughtCard: {
+    backgroundColor: '#f8f9fa',
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#6cace4',
+    borderColor: '#e9ecef',
   },
-  suggestionsTitle: {
+  frequentlyBoughtTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#ffffff',
+    color: '#041f41',
     marginBottom: 16,
   },
-  suggestionsScroll: {
+  frequentlyBoughtScroll: {
     marginHorizontal: -20,
     paddingHorizontal: 20,
   },
-  suggestionItem: {
-    alignItems: 'center',
+  frequentlyBoughtItem: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+    padding: 12,
     marginRight: 16,
-    width: 100,
+    width: 180,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+    position: 'relative',
   },
-  suggestionImage: {
-    width: 80,
-    height: 80,
+  frequentlyBoughtImage: {
+    width: 110,
+    height: 150,
     borderRadius: 12,
     marginBottom: 8,
+    alignSelf: 'center',
   },
-  suggestionText: {
-    fontSize: 12,
-    color: '#ffffff',
-    textAlign: 'center',
-    marginBottom: 4,
-    fontWeight: '500',
-  },
-  suggestionPrice: {
-    fontSize: 12,
-    color: '#ffc220',
+  frequentlyBoughtName: {
+    fontSize: 14,
     fontWeight: '600',
+    color: '#041f41',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  frequentlyBoughtBrand: {
+    fontSize: 12,
+    color: '#6c757d',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  frequentlyBoughtFeatures: {
+    fontSize: 11,
+    color: '#10B981',
+    marginBottom: 8,
+    textAlign: 'center',
+    lineHeight: 14,
+  },
+  frequentlyBoughtPrice: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0071ce',
     textAlign: 'center',
   },
   actionButtons: {
@@ -486,7 +654,7 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     flex: 1,
-    backgroundColor: 'rgba(0, 113, 206, 0.2)',
+    backgroundColor: 'rgba(0, 113, 206, 0.1)',
     paddingVertical: 16,
     borderRadius: 12,
     flexDirection: 'row',
@@ -512,9 +680,75 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   quickActionText: {
-    color: '#6cace4',
+    color: '#6c757d',
     fontSize: 12,
     fontWeight: '600',
     marginTop: 6,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 24,
+    width: '90%',
+    maxWidth: 400,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalIconContainer: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: 12,
+    padding: 8,
+    marginRight: 12,
+  },
+  modalTitle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#041f41',
+  },
+  modalCloseButton: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(108, 117, 125, 0.1)',
+  },
+  modalBody: {
+    marginBottom: 24,
+  },
+  modalText: {
+    fontSize: 16,
+    color: '#6c757d',
+    lineHeight: 24,
+    textAlign: 'left',
+  },
+  modalButton: {
+    backgroundColor: '#0071ce',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#0071ce',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  modalButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
   },
 });

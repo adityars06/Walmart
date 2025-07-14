@@ -104,45 +104,38 @@ export default function Home() {
   const smartPicks = [
     {
       id: 1,
-      name: "Protein Bars",
-      brand: "Quest",
-      price: "$12.99",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop",
+      name: "Quinoa Packs",
+      brand: "Kirkland Signature",
+      price: "$8.99",
+      image: require('../../assets/images/home/smartpick/quinoapacks-kirkland.avif'),
     },
     {
       id: 2,
-      name: "Electrolyte Drink",
-      brand: "Gatorade",
-      price: "$4.99",
-      image: "https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=200&h=200&fit=crop",
+      name: "Biotin Shampoo",
+      brand: "OGX",
+      price: "$6.49",
+      image: require('../../assets/images/home/smartpick/shampoo-biotin.webp'),
     },
     {
       id: 3,
       name: "Coconut Water",
       brand: "Vita Coco",
       price: "$5.49",
-      image: "https://images.unsplash.com/photo-1571212515416-6bf6ca2f5847?w=200&h=200&fit=crop",
+      image: require('../../assets/images/home/smartpick/coconut-water.avif'),
     },
     {
       id: 4,
-      name: "Energy Bars",
-      brand: "Clif Bar",
-      price: "$8.99",
-      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop",
+      name: "Pure Protein Bar",
+      brand: "Pure Protein",
+      price: "$12.99",
+      image: require('../../assets/images/home/smartpick/pureprotein.avif'),
     },
     {
       id: 5,
-      name: "Sports Drink",
-      brand: "Powerade",
-      price: "$3.99",
-      image: "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=200&h=200&fit=crop",
-    },
-    {
-      id: 6,
-      name: "Recovery Shake",
-      brand: "Muscle Milk",
-      price: "$15.99",
-      image: "https://images.unsplash.com/photo-1601050690591-3131980d4c3e?w=200&h=200&fit=crop",
+      name: "Gatorade",
+      brand: "Gatorade",
+      price: "$4.99",
+      image: require('../../assets/images/need of the hour/gatorade.jpeg'),
     },
   ];
 
@@ -154,7 +147,7 @@ export default function Home() {
       originalPrice: "$9.99",
       discountPrice: "$6.99",
       discount: "30% OFF",
-      image: "https://images.unsplash.com/photo-1508747703725-719777637510?w=200&h=200&fit=crop",
+      image: require('../../assets/images/home/discount/organic almonds.webp'),
     },
     {
       id: 2,
@@ -163,7 +156,7 @@ export default function Home() {
       originalPrice: "$5.49",
       discountPrice: "$3.99",
       discount: "27% OFF",
-      image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&h=200&fit=crop",
+      image: require('../../assets/images/home/discount/greek yogurt.jpeg'),
     },
     {
       id: 3,
@@ -172,7 +165,7 @@ export default function Home() {
       originalPrice: "$12.99",
       discountPrice: "$8.99",
       discount: "31% OFF",
-      image: "https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=200&h=200&fit=crop",
+      image: require('../../assets/images/home/discount/vitamin d3.jpeg'),
     },
     {
       id: 4,
@@ -181,7 +174,7 @@ export default function Home() {
       originalPrice: "$7.99",
       discountPrice: "$5.49",
       discount: "31% OFF",
-      image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200&h=200&fit=crop",
+      image: require('../../assets/images/home/discount/organic honey.webp'),
     },
     {
       id: 5,
@@ -190,52 +183,38 @@ export default function Home() {
       originalPrice: "$39.99",
       discountPrice: "$29.99",
       discount: "25% OFF",
-      image: "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=200&h=200&fit=crop",
+      image: require('../../assets/images/home/discount/organic honey.webp'),
     },
   ];
 
   const recentScans = [
     {
       id: 1,
-      name: "Bread",
+      name: "Canyon Bakers Bread",
       status: "Safe",
-      image: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=120&h=120&fit=crop",
+      statusDetail: "",
+      image: require('../../assets/images/home/recentScans/CanyonBakehouse bread.webp'),
     },
     {
       id: 2,
-      name: "Face Cream",
-      status: "Check Required",
-      image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=120&h=120&fit=crop",
+      name: "Puracy Shampoo",
+      status: "Unsafe",
+      statusDetail: "Contains parabens - not suitable for thin hair",
+      image: require('../../assets/images/home/recentScans/puracy-shampoo-citrus.webp'),
     },
     {
       id: 3,
-      name: "Shampoo",
+      name: "Chicken Party Wings",
       status: "Safe",
-      image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=120&h=120&fit=crop",
+      statusDetail: "",
+      image: require('../../assets/images/home/recentScans/Chicken Party Wings.webp'),
     },
     {
       id: 4,
-      name: "Cereal",
-      status: "Safe",
-      image: "https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?w=120&h=120&fit=crop",
-    },
-    {
-      id: 5,
       name: "Sunscreen",
-      status: "Check Required",
-      image: "https://images.unsplash.com/photo-1556909123-f7e1c7c3cbd7?w=120&h=120&fit=crop",
-    },
-    {
-      id: 6,
-      name: "Pasta Sauce",
-      status: "Safe",
-      image: "https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=120&h=120&fit=crop",
-    },
-    {
-      id: 7,
-      name: "Hand Soap",
-      status: "Safe",
-      image: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=120&h=120&fit=crop",
+      status: "Cautious",
+      statusDetail: "Contains Homosalate - may disrupt hormone levels",
+      image: require('../../assets/images/home/recentScans/sunscreen.webp'),
     },
   ];
 
@@ -336,12 +315,19 @@ export default function Home() {
           >
             {smartPicks.map((item) => (
               <View key={item.id} style={styles.productCard}>
-                <Image source={{ uri: item.image }} style={styles.productImage} />
+                <Image source={item.image} style={styles.productImage} />
                 <Text style={styles.productName}>{item.name}</Text>
                 <Text style={styles.productBrand}>{item.brand}</Text>
                 <Text style={styles.productPrice}>{item.price}</Text>
               </View>
             ))}
+            <TouchableOpacity style={styles.discoverMoreCard}>
+              <View style={styles.discoverMoreIcon}>
+                <Text style={styles.discoverMoreIconText}>🔍</Text>
+              </View>
+              <Text style={styles.discoverMoreText}>Discover More</Text>
+              <Text style={styles.discoverMoreArrow}>→</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 
@@ -359,7 +345,7 @@ export default function Home() {
                 <View style={styles.discountBadge}>
                   <Text style={styles.discountBadgeText}>{item.discount}</Text>
                 </View>
-                <Image source={{ uri: item.image }} style={styles.productImage} />
+                <Image source={item.image} style={styles.productImage} />
                 <Text style={styles.productName}>{item.name}</Text>
                 <Text style={styles.productBrand}>{item.brand}</Text>
                 <View style={styles.priceContainer}>
@@ -377,15 +363,22 @@ export default function Home() {
           <View style={styles.recentScansContainer}>
             {recentScans.map((item) => (
               <TouchableOpacity key={item.id} style={styles.recentScanCard}>
-                <Image source={{ uri: item.image }} style={styles.recentScanImage} />
+                <Image source={item.image} style={styles.recentScanImage} />
                 <View style={styles.recentScanInfo}>
                   <Text style={styles.recentScanName}>{item.name}</Text>
                   <Text style={[
                     styles.recentScanStatus, 
-                    { color: item.status === "Safe" ? "#22c55e" : "#ffc220" }
+                    { 
+                      color: item.status === "Safe" ? "#22c55e" : 
+                            item.status === "Unsafe" ? "#ef4444" : 
+                            item.status === "Cautious" ? "#f59e0b" : "#ffc220" 
+                    }
                   ]}>
                     {item.status}
                   </Text>
+                  {item.statusDetail && (
+                    <Text style={styles.recentScanDetail}>{item.statusDetail}</Text>
+                  )}
                 </View>
               </TouchableOpacity>
             ))}
@@ -706,6 +699,48 @@ const styles = StyleSheet.create({
     color: "#ffc220",
   },
   
+  // Discover More Card
+  discoverMoreCard: {
+    backgroundColor: "#ffffff15",
+    borderRadius: 15,
+    padding: 20,
+    marginRight: 15,
+    width: 160,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#ffc220",
+    borderStyle: "dashed",
+    alignSelf: "center",
+    marginTop: 50,
+  },
+  discoverMoreIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "#ffc220",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  discoverMoreIconText: {
+    fontSize: 16,
+    color: "#041f41",
+  },
+  discoverMoreText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#ffffff",
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  discoverMoreArrow: {
+    fontSize: 16,
+    color: "#ffc220",
+    fontWeight: "bold",
+  },
+  
   // Discount Cards
   discountCard: {
     backgroundColor: "#ffffff15",
@@ -779,6 +814,12 @@ const styles = StyleSheet.create({
   recentScanStatus: {
     fontSize: 14,
     fontWeight: "500",
+  },
+  recentScanDetail: {
+    fontSize: 12,
+    color: "#6cace4",
+    marginTop: 4,
+    lineHeight: 16,
   },
   
   // View All Button
