@@ -275,32 +275,48 @@ export default function Home() {
 
         {/* Health Stats Card */}
         <View style={styles.healthStatsCard}>
-          <Text style={styles.healthStatsTitle}>Your Health Today</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={styles.statIcon}>👟</Text>
-              <Text style={styles.statValue}>12,391</Text>
-              <Text style={styles.statLabel}>Steps</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statIcon}>🔥</Text>
-              <Text style={styles.statValue}>193</Text>
-              <Text style={styles.statLabel}>Calories</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statIcon}>⏱️</Text>
-              <Text style={styles.statValue}>98</Text>
-              <Text style={styles.statLabel}>Active Min</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statIcon}>🚴</Text>
-              <Text style={styles.statValue}>3 km</Text>
-              <Text style={styles.statLabel}>Cycling</Text>
+          <View style={styles.healthStatsHeader}>
+            <Image
+              source={require('../../assets/images/fitness-icon/tracker.png')}
+              style={styles.trackerIcon}
+              resizeMode="contain"
+            />
+            <View style={styles.statsContainer}>
+              <View style={styles.statsRow}>
+                <View style={styles.statItem}>
+                  <View style={styles.statIconContainer}>
+                    <Text style={styles.statIconText}>👣</Text>
+                  </View>
+                  <Text style={styles.statValue}>12,391</Text>
+                  <Text style={styles.statLabel}>Steps</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <View style={styles.statIconContainer}>
+                    <Text style={styles.statIconText}>🔥</Text>
+                  </View>
+                  <Text style={styles.statValue}>193</Text>
+                  <Text style={styles.statLabel}>Calories</Text>
+                </View>
+              </View>
+              <View style={styles.statsRow}>
+                <View style={styles.statItem}>
+                  <View style={styles.statIconContainer}>
+                    <Text style={styles.statIconText}>⏰</Text>
+                  </View>
+                  <Text style={styles.statValue}>98</Text>
+                  <Text style={styles.statLabel}>Active Min</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <View style={styles.statIconContainer}>
+                    <Text style={styles.statIconText}>🚴‍♂️</Text>
+                  </View>
+                  <Text style={styles.statValue}>3 km</Text>
+                  <Text style={styles.statLabel}>Cycling</Text>
+                </View>
+              </View>
             </View>
           </View>
-          <Text style={styles.healthMessage}>
-            You look in need of some electrolytes or protein bars
-          </Text>
+          
           <TouchableOpacity 
             style={styles.tailoredButton}
             onPress={() => router.push('/tailoredSection')}
@@ -552,15 +568,27 @@ const styles = StyleSheet.create({
   
   // Health Stats Card
   healthStatsCard: {
-    backgroundColor: "#0071ce",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 20,
-    padding: 25,
+    padding: 20,
     marginBottom: 30,
+    borderWidth: 2,
+    borderColor: "rgba(255, 255, 255, 0.3)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 4,
+  },
+  healthStatsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  trackerIcon: {
+    width: 140,
+    height: 140,
+    marginRight: 10,
   },
   healthStatsTitle: {
     fontSize: 20,
@@ -569,18 +597,34 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  statsGrid: {
+  statsContainer: {
+    flex: 1,
+  },
+  statsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   statItem: {
     alignItems: "center",
     flex: 1,
   },
+  statIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#ffffff20",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+  },
   statIcon: {
     fontSize: 24,
     marginBottom: 8,
+  },
+  statIconText: {
+    fontSize: 18,
+    color: "#ffffff",
   },
   statValue: {
     fontSize: 18,
