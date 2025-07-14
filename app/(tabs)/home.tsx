@@ -301,7 +301,10 @@ export default function Home() {
           <Text style={styles.healthMessage}>
             You look in need of some electrolytes or protein bars
           </Text>
-          <TouchableOpacity style={styles.tailoredButton}>
+          <TouchableOpacity 
+            style={styles.tailoredButton}
+            onPress={() => router.push('/tailoredSection')}
+          >
             <Text style={styles.tailoredButtonText}>Tailored Products for You</Text>
           </TouchableOpacity>
         </View>

@@ -34,9 +34,18 @@ export default function LoginSignup() {
           />
           <Text style={styles.brandTitle}>TrueCart+</Text>
         </View>
-        <Text style={styles.subtitle}>
-          Personalize your Walmart shopping with health-smart alerts and product guidance – tailored just for you.
+        
+        {/* Tagline */}
+        <Text style={styles.tagline}>
+          Your health, your stats, your lifestyle — Walmart shopping made personal.
         </Text>
+        
+        {/* Bitmoji Avatar */}
+        <Image
+          source={require('../assets/images/bitmoji/index/index1.png')}
+          style={styles.bitmojiImage}
+          resizeMode="contain"
+        />
       </View>
 
       {/* Login/Signup Buttons */}
@@ -67,12 +76,16 @@ export default function LoginSignup() {
           <Text style={styles.featureText}>Allergy Protection</Text>
         </View>
         <View style={styles.feature}>
-          <Text style={styles.featureEmoji}>🥗</Text>
-          <Text style={styles.featureText}>Smart Nutrition</Text>
+          <Text style={styles.featureEmoji}>💚</Text>
+          <Text style={styles.featureText}>Smart Shopping</Text>
         </View>
         <View style={styles.feature}>
           <Text style={styles.featureEmoji}>⏰</Text>
           <Text style={styles.featureText}>Save Time</Text>
+        </View>
+        <View style={styles.feature}>
+          <Text style={styles.featureEmoji}>💰</Text>
+          <Text style={styles.featureText}>Curated Deals</Text>
         </View>
       </View>
     </View>
@@ -132,7 +145,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   headerSection: {
-    paddingTop: 140,
+    paddingTop: 120,
     paddingHorizontal: 30,
     alignItems: 'center',
     zIndex: 5,
@@ -140,25 +153,41 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     color: '#ffffff',
     fontWeight: '300',
-    marginBottom: 20,
+    marginBottom: 8,
   },
   brandContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   logo: {
-    width: 160,
-    height: 50,
-    marginRight: 15,
+    width: 140,
+    height: 42,
+    marginRight: 12,
   },
   brandTitle: {
-    fontSize: 28,
+    fontSize: 24,
     color: '#ffffff',
     fontWeight: 'bold',
+  },
+  tagline: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.8)',
+    textAlign: 'center',
+    lineHeight: 16,
+    marginTop: 8,
+    marginBottom: 15,
+    paddingHorizontal: 20,
+    fontStyle: 'italic',
+  },
+  bitmojiImage: {
+    width: 180,
+    height: 180,
+    marginVertical: 20,
+    alignSelf: 'center',
   },
   subtitle: {
     fontSize: 16,
