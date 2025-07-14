@@ -139,10 +139,9 @@ export default function Profile() {
           <Text style={styles.sectionTitle}>Health Goals</Text>
           <TouchableOpacity
             onPress={() => setIsHealthDataModalVisible(true)}
-            style={styles.primaryButton}
+            style={styles.editButton}
           >
-            <Ionicons name="pencil" size={18} color="white" />
-            <Text style={styles.buttonText}>Edit</Text>
+            <Ionicons name="pencil" size={18} color="#0071ce" />
           </TouchableOpacity>
         </View>
         <View style={styles.tagsContainer}>
@@ -158,6 +157,12 @@ export default function Profile() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Allergies</Text>
+          <TouchableOpacity
+            onPress={() => setIsHealthDataModalVisible(true)}
+            style={styles.editButton}
+          >
+            <Ionicons name="pencil" size={18} color="#0071ce" />
+          </TouchableOpacity>
         </View>
         <View style={styles.tagsContainer}>
           {healthData.allergies.map((allergy, index) => (
@@ -172,6 +177,12 @@ export default function Profile() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Medical Conditions</Text>
+          <TouchableOpacity
+            onPress={() => setIsHealthDataModalVisible(true)}
+            style={styles.editButton}
+          >
+            <Ionicons name="pencil" size={18} color="#0071ce" />
+          </TouchableOpacity>
         </View>
         <View style={styles.tagsContainer}>
           {healthData.medicalConditions.map((condition, index) => (
@@ -186,6 +197,12 @@ export default function Profile() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Personal Note</Text>
+          <TouchableOpacity
+            onPress={() => setIsHealthDataModalVisible(true)}
+            style={styles.editButton}
+          >
+            <Ionicons name="pencil" size={18} color="#0071ce" />
+          </TouchableOpacity>
         </View>
         <Text style={styles.personalNote}>{healthData.personalNote}</Text>
       </View>
@@ -193,13 +210,12 @@ export default function Profile() {
       {/* Health Apps */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Connected Health Apps</Text>
+          <Text style={styles.sectionTitle}>Connect Health Apps</Text>
           <TouchableOpacity
             onPress={() => setIsAppsModalVisible(true)}
-            style={styles.primaryButton}
+            style={styles.editButton}
           >
-            <Ionicons name="settings" size={18} color="white" />
-            <Text style={styles.buttonText}>Manage</Text>
+            <Ionicons name="settings" size={18} color="#0071ce" />
           </TouchableOpacity>
         </View>
         <View style={styles.healthAppsContainer}>
@@ -241,9 +257,8 @@ export default function Profile() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Medical Reports</Text>
-          <TouchableOpacity style={styles.primaryButton}>
-            <Ionicons name="cloud-upload" size={18} color="white" />
-            <Text style={styles.buttonText}>Upload</Text>
+          <TouchableOpacity style={styles.editButton}>
+            <Ionicons name="cloud-upload" size={18} color="#0071ce" />
           </TouchableOpacity>
         </View>
         {uploadedReports.map((report) => (
